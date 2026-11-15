@@ -1,26 +1,71 @@
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --color-primary: #B32526;
+  --color-primary-dark: #781E24;
+
+  /* Backgrounds */
+  --color-background: #F8F5EF;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #EFE9DF;
+
+  /* Typography */
+  --color-heading: #292624;
+  --color-text: #514A45;
+  --color-muted: #81766C;
+
+  /* Accents */
+  --color-gold: #A58B64;
+  --color-sage: #788477;
+  --color-dusty-rose: #B9A9A0;
+  --color-sand: #D9C6A5;
+
+  /* Fonts */
+  --font-heading: "Cormorant Garamond", serif;
+  --font-body: "DM Sans", sans-serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+  --color-heading: var(--color-heading);
+  --color-body: var(--color-text);
+  --font-serif: var(--font-heading);
+  --font-sans: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+::selection {
+  background: var(--color-primary);
+  color: white;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
 }
