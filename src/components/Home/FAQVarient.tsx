@@ -131,8 +131,7 @@ export default function FAQSection() {
           })}
         </div>
 
-        {/* Contact */}
-     
+      
 
       </div>
     </section>

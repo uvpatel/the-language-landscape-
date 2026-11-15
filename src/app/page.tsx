@@ -13,12 +13,10 @@ export default function Home() {
   return (
     <>
      <HeroSection />
-     <IntroductionSection />
-    
+     <IntroductionSection />    
      <FounderSection />
      <LearningApproachSection />
     
-  
      {/* <FAQSection /> */}
      <FAQSectionVariant />
      <FinalCTASection />

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   IconArrowUpRight,
   IconArrowDown,
@@ -16,7 +16,29 @@ const languages = [
   { word: "Ciao", position: "bottom-16 right-[12%]", rotate: "-rotate-6" },
 ];
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const revealUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.85, ease },
+  },
+};
+
+const contentContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+    },
+  },
+};
+
 export default function FinalCTASection() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section
       id="start-journey"
@@ -24,21 +46,47 @@ export default function FinalCTASection() {
     >
       {/* Background decoration */}
       <div className="pointer-events-none absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full border border-white/[0.07]" />
-      <div className="pointer-events-none absolute -left-20 -top-20 h-[340px] w-[340px] rounded-full border border-white/[0.07]" />
+
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0.4, scale: 0.9 }}
+        whileInView={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.8, ease }}
+        className="pointer-events-none absolute -left-20 -top-20 h-[340px] w-[340px] rounded-full border border-white/[0.07]"
+      />
+
       <div className="pointer-events-none absolute -bottom-48 -right-40 h-[550px] w-[550px] rounded-full border border-white/[0.07]" />
+
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
+        whileInView={shouldReduceMotion ? undefined : { opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease }}
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#B32526]/20 blur-[120px]"
+      />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Eyebrow */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={contentContainer}
+          initial={shouldReduceMotion ? false : "hidden"}
+          whileInView={shouldReduceMotion ? undefined : "visible"}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
           className="mb-14 flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-[#D9C6A5]"
         >
-          <span className="h-px w-8 bg-[#D9C6A5]" />
-          12 — Your next chapter begins here
-          <span className="h-px w-8 bg-[#D9C6A5]" />
+          <motion.span
+            variants={revealUp}
+            className="h-px w-8 bg-[#D9C6A5]"
+          />
+
+          <motion.span variants={revealUp}>
+            12 — Your next chapter begins here
+          </motion.span>
+
+          <motion.span
+            variants={revealUp}
+            className="h-px w-8 bg-[#D9C6A5]"
+          />
         </motion.div>
 
         {/* Main content */}
@@ -48,10 +96,38 @@ export default function FinalCTASection() {
             {languages.map((item, index) => (
               <motion.span
                 key={item.word}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 0.55, y: 0 }}
+                initial={
+                  shouldReduceMotion
+                    ? false
+                    : { opacity: 0, y: 20, rotate: 0 }
+                }
+                whileInView={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        opacity: 0.55,
+                        y: 0,
+                        rotate: index % 2 === 0 ? -8 : 6,
+                      }
+                }
+                animate={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        y: [0, -9, 0],
+                      }
+                }
                 viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.15 * index }}
+                transition={{
+                  opacity: { duration: 0.8, delay: 0.2 + index * 0.12, ease },
+                  y: {
+                    duration: 5 + index,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: index * 0.3,
+                  },
+                  rotate: { duration: 0.8, ease },
+                }}
                 className={`absolute ${item.position} ${item.rotate} font-[family-name:var(--font-heading)] text-2xl italic text-[#D9C6A5]`}
               >
                 {item.word}.
@@ -60,70 +136,116 @@ export default function FinalCTASection() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+            variants={contentContainer}
+            initial={shouldReduceMotion ? false : "hidden"}
+            whileInView={shouldReduceMotion ? undefined : "visible"}
+            viewport={{ once: true, amount: 0.3 }}
           >
-            <div className="mb-8 flex justify-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 text-[#D9C6A5]">
+            {/* World icon */}
+            <motion.div
+              variants={revealUp}
+              className="mb-8 flex justify-center"
+            >
+              <motion.div
+                animate={
+                  shouldReduceMotion
+                    ? undefined
+                    : { rotate: [0, 8, 0, -8, 0] }
+                }
+                transition={{
+                  duration: 12,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 text-[#D9C6A5]"
+              >
                 <IconWorld size={27} stroke={1.3} />
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <h2 className="font-[family-name:var(--font-heading)] text-5xl leading-[1.05] tracking-tight sm:text-7xl lg:text-8xl">
+            {/* Heading */}
+            <motion.h2
+              variants={revealUp}
+              className="font-[family-name:var(--font-heading)] text-5xl leading-[1.05] tracking-tight sm:text-7xl lg:text-8xl"
+            >
               Every language
               <br />
               <span className="italic text-[#D9C6A5]">
                 opens a new world.
               </span>
-            </h2>
+            </motion.h2>
 
-            <p className="mx-auto mt-8 max-w-2xl text-base leading-8 text-[#F0E4DD]/80 sm:text-lg">
+            {/* Description */}
+            <motion.p
+              variants={revealUp}
+              className="mx-auto mt-8 max-w-2xl text-base leading-8 text-[#F0E4DD]/80 sm:text-lg"
+            >
               Whether you are taking your first step, preparing for an
               examination or exploring a new culture, your language journey
               can begin here.
-            </p>
+            </motion.p>
           </motion.div>
 
           {/* CTA buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+            whileInView={
+              shouldReduceMotion
+                ? undefined
+                : { opacity: 1, y: 0 }
+            }
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.25, ease }}
             className="mt-11 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <a
+            <motion.a
               href="#contact"
-              className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#F8F5EF] px-8 py-4 text-sm font-semibold text-[#781E24] transition-all duration-300 hover:-translate-y-1 hover:bg-[#D9C6A5] sm:w-auto"
+              whileHover={
+                shouldReduceMotion
+                  ? undefined
+                  : { y: -4, scale: 1.02 }
+              }
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+              transition={{ duration: 0.3, ease }}
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#F8F5EF] px-8 py-4 text-sm font-semibold text-[#781E24] transition-colors duration-300 hover:bg-[#D9C6A5] sm:w-auto"
             >
               Start your journey
               <IconArrowUpRight
                 size={19}
-                className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
+                className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
               />
-            </a>
+            </motion.a>
 
-            <a
+            <motion.a
               href="#programs"
-              className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-[#F8F5EF] transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white/10 sm:w-auto"
+              whileHover={
+                shouldReduceMotion
+                  ? undefined
+                  : { y: -4, scale: 1.02 }
+              }
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
+              transition={{ duration: 0.3, ease }}
+              className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-[#F8F5EF] transition-all duration-300 hover:border-white hover:bg-white/10 sm:w-auto"
             >
               Explore programs
               <IconArrowDown
                 size={18}
-                className="transition-transform group-hover:translate-y-1"
+                className="transition-transform duration-300 group-hover:translate-y-1"
               />
-            </a>
+            </motion.a>
           </motion.div>
         </div>
 
         {/* Bottom statement */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+          whileInView={
+            shouldReduceMotion
+              ? undefined
+              : { opacity: 1, y: 0 }
+          }
           viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.35 }}
+          transition={{ duration: 0.8, delay: 0.2, ease }}
           className="mt-24 border-t border-white/15 pt-8"
         >
           <div className="flex flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
@@ -133,6 +255,7 @@ export default function FinalCTASection() {
                 stroke={1.4}
                 className="text-[#D9C6A5]"
               />
+
               <p className="text-sm text-[#F0E4DD]/80">
                 One conversation can begin a new journey.
               </p>

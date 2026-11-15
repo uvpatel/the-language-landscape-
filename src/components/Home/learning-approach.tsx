@@ -1,4 +1,6 @@
 
+"use client";
+
 import {
   IconHeadphones,
   IconMessageCircle,
@@ -8,6 +10,7 @@ import {
   IconArrowUpRight,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
 
 const pillars = [
   {
@@ -52,50 +55,135 @@ const pillars = [
   },
 ];
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const reveal = {
+  hidden: { opacity: 0, y: 35 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease },
+  },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardReveal = {
+  hidden: { opacity: 0, y: 55 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.85, ease },
+  },
+};
+
 export function LearningApproachSection() {
+  const shouldReduceMotion = useReducedMotion();
+
+  const revealVariants = shouldReduceMotion
+    ? { hidden: {}, visible: {} }
+    : reveal;
+
+  const cardVariants = shouldReduceMotion
+    ? { hidden: {}, visible: {} }
+    : cardReveal;
+
+  const containerVariants = shouldReduceMotion
+    ? { hidden: {}, visible: {} }
+    : staggerContainer;
+
   return (
     <section
       id="approach"
-      className="bg-[#F8F5EF] py-24 sm:py-32"
+      className="overflow-hidden bg-[#F8F5EF] py-24 sm:py-32"
     >
       <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
+
         {/* Section heading */}
-        <div className="mb-14 flex items-center gap-3">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.7 }}
+          variants={revealVariants}
+          className="mb-14 flex items-center gap-3"
+        >
           <span className="h-px w-10 bg-[#B32526]" />
+
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#81766C]">
             05 — The way we learn
           </p>
-        </div>
+        </motion.div>
 
         {/* Intro */}
         <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
-          <h2 className="max-w-2xl font-[family-name:var(--font-heading)] text-5xl font-normal leading-[1.1] tracking-tight text-[#292624] sm:text-6xl lg:text-[68px]">
-            A language is learned by
-            <span className="block italic text-[#B32526]">
-              living it.
-            </span>
-          </h2>
 
-          <div className="max-w-xl lg:justify-self-end">
+          <motion.h2
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            className="max-w-2xl font-[family-name:var(--font-heading)] text-5xl font-normal leading-[1.1] tracking-tight text-[#292624] sm:text-6xl lg:text-[68px]"
+          >
+            <motion.span variants={revealVariants} className="block">
+              A language is learned by
+            </motion.span>
+
+            <motion.span
+              variants={revealVariants}
+              className="block italic text-[#B32526]"
+            >
+              living it.
+            </motion.span>
+          </motion.h2>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            variants={revealVariants}
+            className="max-w-xl lg:justify-self-end"
+          >
             <p className="text-base leading-8 text-[#514A45] sm:text-lg">
               Meaningful language learning happens when understanding
               meets expression. Our approach brings together five
               essential skills, helping learners move beyond textbooks
               and develop the ability to use language in real-life situations.
             </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Five learning pillars */}
-        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={containerVariants}
+          className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-6"
+        >
           {pillars.map((pillar, index) => {
             const Icon = pillar.icon;
             const isLast = index === 4;
 
             return (
-              <article
+              <motion.article
                 key={pillar.number}
-                className={`group flex min-h-[270px] flex-col justify-between rounded-2xl border p-7 transition-all duration-300 hover:-translate-y-1 ${
+                variants={cardVariants}
+                whileHover={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        y: -7,
+                        transition: { duration: 0.3, ease },
+                      }
+                }
+                className={`group flex min-h-[270px] flex-col justify-between rounded-2xl border p-7 transition-colors duration-500 ${
                   isLast
                     ? "border-[#781E24] bg-[#781E24] text-[#F8F5EF] lg:col-span-2"
                     : "border-[#E4DDD3] bg-[#EFE9DF] text-[#292624] hover:border-[#B32526]/40 hover:bg-white lg:col-span-2"
@@ -109,17 +197,27 @@ export function LearningApproachSection() {
                   >
                     {pillar.number}
                   </span>
-                  <Icon
-                    size={30}
-                    stroke={1.4}
-                    className={
-                      isLast ? "text-[#E9CFC4]" : "text-[#B32526]"
+
+                  <motion.span
+                    whileHover={
+                      shouldReduceMotion
+                        ? undefined
+                        : { rotate: 8, scale: 1.15 }
                     }
-                  />
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Icon
+                      size={30}
+                      stroke={1.4}
+                      className={
+                        isLast ? "text-[#E9CFC4]" : "text-[#B32526]"
+                      }
+                    />
+                  </motion.span>
                 </div>
 
                 <div>
-                  <h3 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl">
+                  <h3 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl transition-transform duration-300 group-hover:translate-x-1">
                     {pillar.title}
                   </h3>
 
@@ -139,37 +237,62 @@ export function LearningApproachSection() {
                     {pillar.detail}
                   </p>
                 </div>
-              </article>
+              </motion.article>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Closing statement */}
-        <div className="mt-20 flex flex-col items-center border-y border-[#D9CFC2] py-12 text-center sm:py-16">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#81766C]">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          variants={containerVariants}
+          className="mt-20 flex flex-col items-center border-y border-[#D9CFC2] py-12 text-center sm:py-16"
+        >
+          <motion.p
+            variants={revealVariants}
+            className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#81766C]"
+          >
             Five skills. One journey.
-          </p>
+          </motion.p>
 
-          <h3 className="mt-5 font-[family-name:var(--font-heading)] text-4xl italic text-[#781E24] sm:text-5xl">
+          <motion.h3
+            variants={revealVariants}
+            className="mt-5 font-[family-name:var(--font-heading)] text-4xl italic text-[#781E24] sm:text-5xl"
+          >
             Understand. Express. Connect.
-          </h3>
+          </motion.h3>
 
-          <p className="mt-5 max-w-xl text-sm leading-7 text-[#81766C]">
+          <motion.p
+            variants={revealVariants}
+            className="mt-5 max-w-xl text-sm leading-7 text-[#81766C]"
+          >
             We don't just teach you to learn a language.
             We help you find your voice in it.
-          </p>
+          </motion.p>
 
-          <Link
-            href="#programs"
-            className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#B32526]"
-          >
-            Find your learning path
-            <IconArrowUpRight
-              size={18}
-              className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-            />
-          </Link>
-        </div>
+          <motion.div variants={revealVariants}>
+            <Link
+              href="#programs"
+              className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#B32526]"
+            >
+              Find your learning path
+
+              <motion.span
+                whileHover={
+                  shouldReduceMotion
+                    ? undefined
+                    : { x: 4, y: -4 }
+                }
+                transition={{ duration: 0.25 }}
+              >
+                <IconArrowUpRight size={18} />
+              </motion.span>
+            </Link>
+          </motion.div>
+        </motion.div>
+
       </div>
     </section>
   );
