@@ -1,6 +1,8 @@
-
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import {
   IconArrowUpRight,
   IconBrandInstagram,
@@ -20,6 +22,12 @@ const INSTAGRAM_URL = ""; // Add official Instagram URL
 const LINKEDIN_URL = "";  // Add official LinkedIn URL
 
 export function Footer() {
+     const [year, setYear] = useState<number | null>(null);
+
+     useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="relative overflow-hidden bg-[#292624] text-[#F8F5EF]">
 
@@ -198,10 +206,10 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col justify-between gap-4 border-t border-white/10 py-7 text-[11px] text-[#81766C] md:flex-row md:items-center">
-          <p>
-            © {new Date().getFullYear()} The Language Landscapes Inc.
-            All rights reserved.
-          </p>
+         <p>
+      © {year ?? 2026} The Language Landscape.
+      All rights reserved.
+    </p>
 
           <div className="flex items-center gap-6">
             <Link
