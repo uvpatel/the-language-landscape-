@@ -5,11 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
-  IconArrowUpRight,
+  IconBrandFacebook,
   IconBrandInstagram,
   IconBrandLinkedin,
   IconMail,
-  IconBrandWhatsapp,
+  IconMapPin,
+  IconPhone,
 } from "@tabler/icons-react";
 import { motion, useReducedMotion } from "motion/react";
 
@@ -20,9 +21,6 @@ const navigation = [
   { label: "FAQs", href: "/#faqs" },
 ];
 
-const INSTAGRAM_URL = ""; // Add official Instagram URL
-const LINKEDIN_URL = ""; // Add official LinkedIn URL
-
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Footer() {
@@ -30,6 +28,8 @@ export function Footer() {
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
+    // Keep the year client-derived so prerendering and hydration stay deterministic.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setYear(new Date().getFullYear());
   }, []);
 
@@ -54,49 +54,21 @@ export function Footer() {
 
   const viewport = {
     once: true,
-    amount: 0.2,
+    amount: 0.15,
   };
 
   return (
-    <footer className="relative overflow-hidden bg-[#292624] text-[#F8F5EF]">
-      {/* Decorative background */}
-      <motion.div
-        aria-hidden="true"
-        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.8 }}
-        whileInView={
-          shouldReduceMotion
-            ? undefined
-            : { opacity: 1, scale: 1 }
-        }
-        viewport={viewport}
-        transition={{ duration: 1.6, ease }}
-        className="pointer-events-none absolute -right-40 top-0 h-[450px] w-[450px] rounded-full border border-[#B32526]/20"
-      />
-
-      <motion.div
-        aria-hidden="true"
-        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.8 }}
-        whileInView={
-          shouldReduceMotion
-            ? undefined
-            : { opacity: 1, scale: 1 }
-        }
-        viewport={viewport}
-        transition={{ duration: 1.4, delay: 0.15, ease }}
-        className="pointer-events-none absolute -right-24 top-16 h-[320px] w-[320px] rounded-full border border-[#B32526]/15"
-      />
-
-      <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 lg:px-16">
-        {/* Brand */}
+    <footer className="bg-[#F8F5EF] text-[#514A45]">
+      <div className="mx-auto max-w-[1440px] px-6 md:px-10 lg:px-16">
         <motion.div
           variants={stagger}
           initial={shouldReduceMotion ? false : "hidden"}
           whileInView={shouldReduceMotion ? undefined : "visible"}
           viewport={viewport}
-          className="flex items-center justify-between border-b border-white/10 py-8"
+          className="grid gap-8 border-t border-[#292624]/10 py-9 md:grid-cols-[1.35fr_1fr_1fr_1.15fr] md:gap-0"
         >
-          <motion.div variants={reveal}>
-            <Link href="/" className="flex items-center gap-3">
+          <motion.div variants={reveal} className="md:pr-10">
+            <Link href="/" className="group inline-flex items-center gap-3">
               <motion.div
                 whileHover={shouldReduceMotion ? undefined : { rotate: -5, scale: 1.05 }}
                 transition={{ duration: 0.4, ease }}
@@ -104,266 +76,126 @@ export function Footer() {
                 <Image
                   src="/logo.png"
                   alt="The Language Landscapes"
-                  width={54}
-                  height={54}
-                  className="h-12 w-12 object-contain"
+                  width={42}
+                  height={42}
+                  className="h-14 w-14 object-contain"
                 />
               </motion.div>
 
-              <span className="font-serif text-xl leading-none">
-                The Language
-                <br />
-                Landscapes
+              <span className="font-body text-[19px] font-bold leading-tight tracking-[-0.04em] text-[#292624]">
+                The Language<br />
+                <span className="text-[13px] font-semibold tracking-[0.22em] text-[#A32429]">
+                  LANDSCAPE
+                </span>
               </span>
             </Link>
-          </motion.div>
-
-          <motion.span
-            variants={reveal}
-            className="hidden text-[10px] tracking-[0.25em] text-[#B9AFA4] md:block"
-          >
-            LANGUAGE · CULTURE · CONNECTION
-          </motion.span>
-        </motion.div>
-
-        {/* Main statement */}
-        <div className="grid gap-12 py-20 md:grid-cols-[1.5fr_1fr] md:py-28">
-          <motion.div
-            variants={stagger}
-            initial={shouldReduceMotion ? false : "hidden"}
-            whileInView={shouldReduceMotion ? undefined : "visible"}
-            viewport={viewport}
-            className="max-w-2xl"
-          >
-            <motion.p
-              variants={reveal}
-              className="mb-7 text-[11px] tracking-[0.25em] text-[#B9AFA4] uppercase"
-            >
-              A world of expression
-            </motion.p>
-
-            <motion.h2
-              variants={reveal}
-              className="font-serif text-5xl leading-[1.05] tracking-tight md:text-7xl lg:text-[88px]"
-            >
-              Step in curious.
-              <br />
-              <motion.span
-                initial={
-                  shouldReduceMotion
-                    ? false
-                    : { opacity: 0, y: 24 }
-                }
-                whileInView={
-                  shouldReduceMotion
-                    ? undefined
-                    : { opacity: 1, y: 0 }
-                }
-                viewport={viewport}
-                transition={{ duration: 1, delay: 0.2, ease }}
-                className="inline-block text-[#D9C6A5] italic"
-              >
-                Step out multilingual.
-              </motion.span>
-            </motion.h2>
-
-            <motion.p
-              variants={reveal}
-              className="mt-8 max-w-md text-sm leading-7 text-[#B9AFA4] md:text-base"
-            >
-              Explore languages, discover cultures and find
-              new ways to express yourself. Your journey
-              begins with a single word.
-            </motion.p>
-
-            <motion.div variants={reveal}>
-              <Link
-                href="/#contact"
-                className="group mt-9 inline-flex items-center gap-4 border-b border-[#B32526] pb-2 text-sm transition-colors hover:text-[#D9C6A5]"
-              >
-                Let's start a conversation
-                <motion.span
-                  animate={
-                    shouldReduceMotion
-                      ? undefined
-                      : { x: 0, y: 0 }
-                  }
-                  whileHover={
-                    shouldReduceMotion
-                      ? undefined
-                      : { x: 4, y: -4 }
-                  }
-                  transition={{ duration: 0.3, ease }}
-                >
-                  <IconArrowUpRight size={19} />
-                </motion.span>
-              </Link>
-            </motion.div>
-          </motion.div>
-
-          {/* Navigation */}
-          <motion.div
-            variants={stagger}
-            initial={shouldReduceMotion ? false : "hidden"}
-            whileInView={shouldReduceMotion ? undefined : "visible"}
-            viewport={viewport}
-            className="grid grid-cols-2 gap-8 md:pl-12"
-          >
-            <motion.div variants={reveal}>
-              <h3 className="mb-7 text-[11px] tracking-[0.2em] text-[#D9C6A5] uppercase">
-                Explore
-              </h3>
-
-              <ul className="space-y-5">
-                {navigation.map((item) => (
-                  <motion.li key={item.label} variants={reveal}>
-                    <Link
-                      href={item.href}
-                      className="inline-block text-sm text-[#B9AFA4] transition-colors hover:text-white"
-                    >
-                      {item.label}
-                    </Link>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div variants={reveal}>
-              <h3 className="mb-7 text-[11px] tracking-[0.2em] text-[#D9C6A5] uppercase">
-                Connect
-              </h3>
-
-              <ul className="space-y-5">
-                <motion.li variants={reveal}>
-                  <a
-                    href="mailto:connect@thelanguagefoundation.com"
-                    className="flex items-start gap-2 text-sm leading-6 text-[#B9AFA4] transition-colors hover:text-white"
-                  >
-                    <IconMail size={17} stroke={1.5} className="mt-1 shrink-0" />
-                    <span className="break-all">
-                      connect@thelanguagefoundation.com
-                    </span>
-                  </a>
-                </motion.li>
-
-                <motion.li variants={reveal}>
-                  <a
-                    href="https://wa.me/916353145434"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 text-sm text-[#B9AFA4] transition-colors hover:text-white"
-                  >
-                    <IconBrandWhatsapp size={17} stroke={1.5} />
-                    +91 6353 145 434
-                  </a>
-                </motion.li>
-
-                <motion.li variants={reveal}>
-                  <a
-                    href="https://wa.me/3673800601"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 text-sm text-[#B9AFA4] transition-colors hover:text-white"
-                  >
-                    <IconBrandWhatsapp size={17} stroke={1.5} />
-                    +367-380-0601
-                  </a>
-                </motion.li>
-              </ul>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Social section */}
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 25 }}
-          whileInView={
-            shouldReduceMotion
-              ? undefined
-              : { opacity: 1, y: 0 }
-          }
-          viewport={viewport}
-          transition={{ duration: 0.8, ease }}
-          className="flex flex-col justify-between gap-5 border-t border-white/10 py-8 md:flex-row md:items-center"
-        >
-          <div>
-            <p className="text-[10px] tracking-[0.2em] text-[#B9AFA4] uppercase">
-              Follow our journey
+            <p className="mt-4 max-w-[310px] text-sm leading-6 text-[#6F6963]">
+              A space where languages, cultures and people come together.
+              Discover the confidence to communicate with the world.
             </p>
-            <p className="mt-2 font-serif text-xl text-[#F8F5EF]">
-              Stories without borders.
-            </p>
-          </div>
+            <div className="mt-5 flex gap-3">
+              {[IconBrandInstagram, IconBrandFacebook, IconBrandLinkedin].map(
+                (Icon, index) => (
+                  <a
+                    key={index}
+                    href="#"
+                    aria-label={["Instagram", "Facebook", "LinkedIn"][index]}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-[#292624]/10 text-[#514A45] transition-colors hover:border-[#A32429] hover:text-[#A32429]"
+                  >
+                    <Icon size={17} stroke={1.6} />
+                  </a>
+                ),
+              )}
+            </div>
+          </motion.div>
 
-          <div className="flex items-center gap-5">
-            {INSTAGRAM_URL && (
-              <motion.a
-                href={INSTAGRAM_URL}
+          <motion.div variants={reveal} className="border-[#292624]/10 md:border-l md:px-10">
+            <h2 className="mb-5 text-[11px] font-bold tracking-[0.2em] text-[#A32429] uppercase">
+              Explore
+            </h2>
+            <ul className="space-y-3 text-[15px] text-[#6F6963]">
+              {[
+                ...navigation.slice(0, 2),
+                { label: "Our programs", href: "/#programs" },
+                { label: "Our approach", href: "/#approach" },
+                { label: "Contact", href: "/#contact" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="transition-colors hover:text-[#A32429]">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div variants={reveal} className="border-[#292624]/10 md:border-l md:px-10">
+            <h2 className="mb-5 text-[11px] font-bold tracking-[0.2em] text-[#A32429] uppercase">
+              Our programs
+            </h2>
+            <ul className="space-y-3 text-[15px] text-[#6F6963]">
+              {["French Language", "TEF & TCF Preparation", "DELF Preparation", "Kids Programs", "Corporate Training", "Teacher Training"].map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div variants={reveal} className="border-[#292624]/10 md:border-l md:pl-10">
+            <h2 className="mb-5 text-[11px] font-bold tracking-[0.2em] text-[#A32429] uppercase">
+              Get in touch
+            </h2>
+            <div className="space-y-4 text-[15px] leading-6 text-[#6F6963]">
+              <a
+                href="mailto:connect@thelanguagefoundation.com"
+                className="flex items-start gap-4 transition-colors hover:text-[#A32429]"
+              >
+                <IconMail size={18} stroke={1.5} className="mt-1 shrink-0" />
+                <span>Write to us</span>
+              </a>
+              <a
+                href="https://wa.me/916353145434"
                 target="_blank"
                 rel="noreferrer"
-                aria-label="Instagram"
-                whileHover={shouldReduceMotion ? undefined : { y: -4, scale: 1.1 }}
-                whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
-                transition={{ duration: 0.25 }}
-                className="text-[#B9AFA4] transition-colors hover:text-white"
+                className="flex items-start gap-4 transition-colors hover:text-[#A32429]"
               >
-                <IconBrandInstagram size={22} stroke={1.5} />
-              </motion.a>
-            )}
-
-            {LINKEDIN_URL && (
-              <motion.a
-                href={LINKEDIN_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-                whileHover={shouldReduceMotion ? undefined : { y: -4, scale: 1.1 }}
-                whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
-                transition={{ duration: 0.25 }}
-                className="text-[#B9AFA4] transition-colors hover:text-white"
+                <IconPhone size={18} stroke={1.5} className="mt-1 shrink-0" />
+                <span>Call us</span>
+              </a>
+              <a
+                href="#contact"
+                className="flex items-start gap-4 transition-colors hover:text-[#A32429]"
               >
-                <IconBrandLinkedin size={22} stroke={1.5} />
-              </motion.a>
-            )}
-          </div>
+                <IconMapPin size={18} stroke={1.5} className="mt-1 shrink-0" />
+                <span>
+                  Visit The Language Landscape
+                  <br />
+                  Contact us for our location.
+                </span>
+              </a>
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Bottom bar */}
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={
-            shouldReduceMotion
-              ? undefined
-              : { opacity: 1, y: 0 }
-          }
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={viewport}
-          transition={{ duration: 0.8, ease }}
-          className="flex flex-col justify-between gap-4 border-t border-white/10 py-7 text-[11px] text-[#81766C] md:flex-row md:items-center"
+          transition={{ duration: 0.6, ease }}
+          className="flex flex-col justify-between gap-3 border-t border-[#292624]/10 py-5 text-[11px] tracking-[0.1em] text-[#81766C] sm:flex-row sm:items-center"
         >
-          <p>
-            © {year ?? 2026} The Language Landscape.
-            All rights reserved.
-          </p>
+          <p>© {year ?? 2026} The Language Landscape. All rights reserved.</p>
 
-          <div className="flex items-center gap-6">
-            <Link
-              href="/privacy-policy"
-              className="transition-colors hover:text-white"
-            >
+          <div className="flex flex-wrap items-center gap-x-7 gap-y-2">
+            <Link href="/privacy-policy" className="transition-colors hover:text-[#A32429]">
               Privacy Policy
             </Link>
-
-            <Link
-              href="/terms-and-conditions"
-              className="transition-colors hover:text-white"
-            >
+            <Link href="/terms-and-conditions" className="transition-colors hover:text-[#A32429]">
               Terms & Conditions
             </Link>
+            <p className="font-serif text-base italic tracking-normal text-[#A32429]">
+              A world beyond words.
+            </p>
           </div>
-
-          <p className="font-serif text-sm italic text-[#D9C6A5]">
-            Made for the love of language.
-          </p>
         </motion.div>
       </div>
     </footer>
