@@ -1,13 +1,11 @@
+
 import type { Metadata, Viewport } from "next";
-import {
-  Cormorant_Garamond,
-  DM_Sans,
-} from "next/font/google";
+import { Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-const cormorant = Cormorant_Garamond({
+const playfair = Playfair_Display({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -15,7 +13,7 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const manrope = Manrope({
   variable: "--font-body",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -76,7 +74,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${dmSans.variable}`}
+      className={`${playfair.variable} ${manrope.variable}`}
     >
       <body className="min-h-screen bg-[#F8F5EF] font-[family-name:var(--font-body)] text-[#292624] antialiased">
         <Navbar />

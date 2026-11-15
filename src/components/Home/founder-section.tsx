@@ -25,10 +25,10 @@ export function FounderSection() {
 
             <div className="relative aspect-[4/5] overflow-hidden rounded-t-full rounded-b-2xl bg-[#D9C6A5]">
               <Image
-                src="/banasarithakkar.png"
+                src="/founder.png"
                 alt="Dr. Bansari Thakkar, founder of The Language Landscapes"
                 fill
-                priority={false}
+                loading="eager"
                 sizes="(max-width: 1024px) 90vw, 440px"
                 className="object-cover object-center"
               />
@@ -108,22 +108,7 @@ export function FounderSection() {
         </div>
 
         {/* Founder quote */}
-        <div className="mt-28 border-y border-[#D9CFC2] py-14 text-center sm:py-20">
-          <IconQuote
-            size={34}
-            stroke={1}
-            className="mx-auto text-[#B32526]"
-          />
-
-          <blockquote className="mx-auto mt-5 max-w-4xl font-[family-name:var(--font-heading)] text-3xl leading-tight text-[#781E24] sm:text-4xl lg:text-5xl">
-            Every language opens a new perspective, and
-            <span className="italic"> every voice deserves to be heard.</span>
-          </blockquote>
-
-          <p className="mt-7 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#81766C]">
-            The philosophy behind The Language Landscapes
-          </p>
-        </div>
+     
       </div>
     </section>
   );

@@ -127,16 +127,7 @@ export function IntroductionSection() {
         </div>
 
         {/* Brand statement */}
-        <div className="mt-24 border-y border-[#D9CFC2] py-12 text-center sm:py-16">
-          <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#81766C]">
-            The Language Landscapes
-          </p>
-
-          <blockquote className="mx-auto max-w-4xl font-[family-name:var(--font-heading)] text-3xl leading-tight text-[#781E24] sm:text-4xl lg:text-5xl">
-            “We speak in many expressions, but our message is one —
-            <span className="italic"> unity through language.</span>”
-          </blockquote>
-        </div>
+       
       </div>
     </section>
   );
