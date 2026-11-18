@@ -166,7 +166,7 @@ export function HeroSection2() {
               initial={shouldReduceMotion ? false : { opacity: 0 }}
               animate={shouldReduceMotion ? undefined : { opacity: 1 }}
               transition={{ duration: 0.9, delay: 0.9, ease }}
-              className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-[#E4DDD3] pt-6"
+              className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-3 pt-6"
             >
               <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#81766C]">
                 Programs

@@ -96,7 +96,7 @@ export default function Testimonial() {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between border-t border-[#DCD3C8] pt-5">
+              <div className="flex items-center justify-between pt-5">
                 <div>
                   <p className="font-serif text-lg text-[#781E24]">
                     {testimonial.name}
@@ -116,7 +116,7 @@ export default function Testimonial() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 flex flex-col items-center border-t border-[#DED8CF] pt-12 text-center">
+        <div className="mt-16 flex flex-col items-center pt-12 text-center">
           <p className="mb-4 text-[10px] uppercase tracking-[0.2em] text-[#898078]">
             Your story could be next
           </p>

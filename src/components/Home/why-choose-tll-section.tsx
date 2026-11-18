@@ -143,7 +143,7 @@ export default function WhyChooseTLLSection() {
                 return (
                   <div
                     key={value.title}
-                    className="flex items-center gap-5 border-b border-white/15 py-6 first:pt-0 last:border-0 last:pb-0"
+                    className="flex items-center gap-5 py-6 first:pt-0 last:pb-0"
                   >
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/20 text-[#D9C6A5]">
                       <Icon size={23} stroke={1.4} />
@@ -213,7 +213,7 @@ export default function WhyChooseTLLSection() {
         </div>
 
         {/* Closing statement */}
-        <div className="mt-20 border-t border-white/15 pt-10">
+        <div className="mt-20 pt-10">
           <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-center">
             <div>
               <span className="mb-4 block text-xs uppercase tracking-[0.2em] text-[#D9A09A]">

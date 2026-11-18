@@ -246,7 +246,7 @@ export default function FinalCTASection() {
           }
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2, ease }}
-          className="mt-24 border-t border-white/15 pt-8"
+          className="mt-24 pt-8"
         >
           <div className="flex flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
             <div className="flex items-center gap-3">

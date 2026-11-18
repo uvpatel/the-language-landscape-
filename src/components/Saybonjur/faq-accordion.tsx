@@ -1,11 +1,10 @@
-
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
-import { IconChevronDown } from "@tabler/icons-react";
+import FAQQuestion from "./faq-question";
 
 interface FAQAccordionProps {
   category: string;
+  categoryIndex: number;
   questions: {
     question: string;
     answer: string;
@@ -16,69 +15,52 @@ interface FAQAccordionProps {
 
 export default function FAQAccordion({
   category,
+  categoryIndex,
   questions,
   activeQuestion,
   onToggle,
 }: FAQAccordionProps) {
+  const formattedIndex = String(categoryIndex + 1).padStart(2, "0");
+
   return (
-    <div className="border-t border-[#D9CFC2] py-7">
-      <h3 className="mb-5 font-[family-name:var(--font-heading)] text-2xl text-[#781E24]">
-        {category}
-      </h3>
+    <div
+      role="tabpanel"
+      id={`faq-panel-${categoryIndex}`}
+      aria-labelledby={`faq-tab-${categoryIndex}`}
+      className="w-full"
+    >
+      {/* Category header meta */}
+      <div className="mb-6 flex flex-wrap items-baseline justify-between gap-3 border-b border-[#D9CFC2] pb-4">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-xs font-semibold tracking-wider text-[#B32526]">
+            {formattedIndex}
+          </span>
+          <span className="text-xs uppercase tracking-[0.2em] text-[#81766C]">
+            Category
+          </span>
+          <span className="h-1 w-1 rounded-full bg-[#D9CFC2]" />
+          <h3 className="font-[family-name:var(--font-heading)] text-xl font-medium text-[#292624] sm:text-2xl">
+            {category}
+          </h3>
+        </div>
 
-      <div className="space-y-1">
-        {questions.map((item) => {
-          const isOpen = activeQuestion === item.question;
+        <span className="text-xs font-medium text-[#81766C]">
+          {questions.length} {questions.length === 1 ? "question" : "questions"}
+        </span>
+      </div>
 
-          return (
-            <div
-              key={item.question}
-              className="border-b border-[#D9CFC2]/70"
-            >
-              <button
-                type="button"
-                onClick={() => onToggle(item.question)}
-                aria-expanded={isOpen}
-                className="flex w-full items-center justify-between gap-5 py-5 text-left"
-              >
-                <span className="font-medium text-[#292624] transition-colors hover:text-[#B32526] sm:text-[15px]">
-                  {item.question}
-                </span>
-
-                <span
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center border transition-all ${
-                    isOpen
-                      ? "border-[#B32526] bg-[#B32526] text-white"
-                      : "border-[#D9CFC2] text-[#81766C]"
-                  }`}
-                >
-                  <IconChevronDown
-                    size={17}
-                    className={`transition-transform duration-300 ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </span>
-              </button>
-
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="overflow-hidden"
-                  >
-                    <p className="max-w-3xl pb-6 pr-10 text-sm leading-7 text-[#514A45]">
-                      {item.answer}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
+      {/* Question list */}
+      <div className="border-t border-[#D9CFC2]">
+        {questions.map((item, qIndex) => (
+          <FAQQuestion
+            key={item.question}
+            id={`${categoryIndex}-${qIndex}`}
+            question={item.question}
+            answer={item.answer}
+            isOpen={activeQuestion === item.question}
+            onToggle={() => onToggle(item.question)}
+          />
+        ))}
       </div>
     </div>
   );

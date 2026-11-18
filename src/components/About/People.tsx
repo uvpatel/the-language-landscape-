@@ -1,13 +1,17 @@
+
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import { ease, Reveal, SectionLabel } from "./shared";
 
 const team = [
   {
     name: "Janki Thakkar",
-    initials: "JT",
+    image: "/banasarithakkar.png",
     role: "Head of Operations | Writer | Curator",
+    imageShape: "rounded-tl-[140px] rounded-tr-[20px] rounded-br-[140px] rounded-bl-[20px]",
+    imagePosition: "object-center",
     paragraphs: [
       "An avid reader, Janki's love affair with the written word started very early on.",
       "Writing became her way of making sense of fleeting thoughts, half-held memories and feelings that have no name. Words have always been her way of listening, of reaching out gently to the world and hoping it reaches back.",
@@ -19,8 +23,10 @@ const team = [
   },
   {
     name: "Shailja Lekhadia",
-    initials: "SL",
+    image: "/banasarithakkar.png",
     role: "Design Strategist | Researcher",
+    imageShape: "rounded-tl-[80px] rounded-tr-[80px] rounded-br-[80px] rounded-bl-xl",
+    imagePosition: "object-center",
     paragraphs: [
       "An interior architect who moves fluidly between the poetic and practical realms, Shailja continues to work in the space between research and imagination.",
       "A thinker as much as a maker, her canvas spans interior and graphic design, exhibition storytelling and educational spaces, all through the lens of design thinking.",
@@ -51,37 +57,51 @@ export default function People() {
           </h2>
         </Reveal>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="mt-16 grid gap-12 lg:grid-cols-2 lg:gap-16">
           {team.map((person, i) => (
             <Reveal key={person.name} delay={i * 0.12}>
               <motion.article
-                whileHover={shouldReduceMotion ? undefined : { y: -6 }}
+                whileHover={
+                  shouldReduceMotion ? undefined : { y: -6 }
+                }
                 transition={{ duration: 0.35, ease }}
-                className="flex h-full flex-col rounded-2xl border border-[#E4DDD3] bg-[#EFE9DF] p-8 sm:p-10"
+                className="flex h-full flex-col"
               >
-                <div className="flex items-center gap-5">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[#B32526]/30 bg-[#F8F5EF] font-[family-name:var(--font-heading)] text-xl text-[#B32526]">
-                    {person.initials}
+                <div className="relative flex flex-col items-center rounded-2xl border border-[#E4DDD3] bg-[#EFE9DF] p-6 sm:p-8">
+                  <div
+                    className={`relative h-[300px] w-full max-w-[280px] overflow-hidden border-[6px] border-[#F8F5EF] bg-[#D9C6A5] shadow-[0_15px_40px_rgba(41,38,36,0.10)] transition-transform duration-500 group-hover:scale-[1.02] sm:h-[340px] sm:max-w-[310px] ${person.imageShape}`}
+                  >
+                    <Image
+                      src={person.image}
+                      alt={`Portrait of ${person.name}`}
+                      fill
+                      sizes="(max-width: 640px) 280px, 310px"
+                      className={`object-cover ${person.imagePosition}`}
+                    />
                   </div>
-                  <div>
-                    <h3 className="font-[family-name:var(--font-heading)] text-3xl text-[#292624]">
+
+                  <div className="mt-7 text-center">
+                    <h3 className="font-[family-name:var(--font-heading)] text-3xl text-[#292624] sm:text-4xl">
                       {person.name}
                     </h3>
-                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#81766C]">
+
+                    <p className="mt-3 text-[10px] font-semibold uppercase leading-5 tracking-[0.16em] text-[#81766C] sm:text-xs">
                       {person.role}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-8 space-y-4 text-sm leading-7 text-[#514A45] sm:text-base sm:leading-8">
-                  {person.paragraphs.map((text, idx) => (
-                    <p key={idx}>{text}</p>
-                  ))}
-                </div>
+                <div className="flex flex-1 flex-col px-2 pt-8 sm:px-4">
+                  <div className="space-y-4 text-sm leading-7 text-[#514A45] sm:text-base sm:leading-8">
+                    {person.paragraphs.map((text, idx) => (
+                      <p key={idx}>{text}</p>
+                    ))}
+                  </div>
 
-                <p className="mt-auto border-t border-[#D9CFC2] pt-7 font-[family-name:var(--font-heading)] text-xl leading-snug text-[#B32526]">
-                  &ldquo;{person.quote}&rdquo;
-                </p>
+                  <p className="mt-8 border-t border-[#D9CFC2] pt-7 font-[family-name:var(--font-heading)] text-xl leading-snug text-[#B32526] sm:text-2xl">
+                    &ldquo;{person.quote}&rdquo;
+                  </p>
+                </div>
               </motion.article>
             </Reveal>
           ))}

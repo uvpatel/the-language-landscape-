@@ -132,7 +132,7 @@ export default function Testimonial2() {
               </blockquote>
             </div>
 
-            <div className="flex items-center justify-between gap-6 border-t border-white/20 pt-6 lg:min-w-48 lg:flex-col lg:items-start lg:justify-end lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+            <div className="flex items-center justify-between gap-6 pt-6 lg:min-w-48 lg:flex-col lg:items-start lg:justify-end lg:border-l lg:border-white/20 lg:pl-8 lg:pt-0">
               <div>
                 <p className="font-serif text-2xl">Priya Patel</p>
                 <p className="mt-2 text-[9px] uppercase tracking-[0.2em] text-white/60">
@@ -178,7 +178,7 @@ export default function Testimonial2() {
                 “{testimonial.quote}”
               </blockquote>
 
-              <div className="flex items-center justify-between border-t border-[#DCD3C8] pt-5">
+              <div className="flex items-center justify-between pt-5">
                 <div>
                   <p className="font-serif text-lg text-[#781E24]">
                     {testimonial.name}

@@ -158,12 +158,6 @@ export default function HeroSection() {
       onPointerLeave={handlePointerLeave}
       className="relative isolate overflow-hidden bg-[#F8F5EF]"
     >
-      {/* Background atmosphere */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-[#B32526]/[0.04] blur-3xl" />
-        <div className="absolute -bottom-48 left-[30%] h-[500px] w-[500px] rounded-full bg-[#D9C6A5]/25 blur-3xl" />
-      </div>
-
       <div className="relative mx-auto max-w-[1440px] px-6 pb-12 pt-20 sm:px-10 sm:pt-24 lg:px-16 lg:pb-16 lg:pt-28">
         <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           {/* Copy */}
@@ -184,10 +178,10 @@ export default function HeroSection() {
               initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.1, ease }}
-              className="font-[family-name:var(--font-heading)] text-[clamp(2.2rem,3.8vw,3.6rem)] leading-[1.08] tracking-[-0.03em] text-[#292624]"
+              className="font-[family-name:var(--font-heading)] text-[clamp(2.8rem,5.5vw,5rem)] leading-[0.98] tracking-[-0.035em] text-[#292624]"
             >
               We speak in many expressions, but our message is one:
-              <span className="mt-3 block text-[clamp(3.4rem,7vw,7rem)] italic leading-[0.95] tracking-[-0.045em] text-[#B32526]">
+              <span className="mt-3 block text-[clamp(2.5rem,.5vw,5.5rem)] leading-[0.98] tracking-[-0.04em] text-[#B32526]">
                 Unity through language.
               </span>
             </motion.h1>
