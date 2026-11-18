@@ -1,7 +1,6 @@
 import { FounderSection } from "@/components/Home/founder-section";
 
 import { IntroductionSection } from "@/components/Home/introduction-section";
-import { LearningApproachSection } from "@/components/Home/learning-approach";
 
 import FinalCTASection from "@/components/Home/final-cta-section";
 import FAQSectionVariant from "@/components/Home/FAQVarient";
@@ -16,7 +15,7 @@ export default function Home() {
      <HeroSection />
      <IntroductionSection />    
      <FounderSection />
-     <LearningApproachSection />
+    
      <LearningApproachSection2 />
 
      <FAQSectionVariant />

@@ -5,7 +5,8 @@ import { useState, type FormEvent } from "react";
 import { motion } from "motion/react";
 import { IconCheck, IconSend } from "@tabler/icons-react";
 
-import { programs, proficiencyLevels } from "@/data/say-bonjur/data";
+import { programOptions, proficiencyOptions } from "@/data/say-bonjur/data";
+import PremiumSelect from "./premium-select";
 
 const initialFormData = {
   name: "",
@@ -148,24 +149,15 @@ export default function InquiryForm() {
                 <span className="text-[#B32526]">*</span>
               </label>
 
-              <select
+              <PremiumSelect
                 id="program"
                 name="program"
                 required
                 value={formData.program}
-                onChange={(e) => updateField("program", e.target.value)}
-                className={`${inputClass} cursor-pointer`}
-              >
-                <option value="" disabled>
-                  Select a program
-                </option>
-
-                {programs.map((program) => (
-                  <option key={program} value={program}>
-                    {program}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => updateField("program", val)}
+                options={programOptions}
+                placeholder="Select a program"
+              />
             </div>
 
             <div className="sm:col-span-2">
@@ -176,25 +168,14 @@ export default function InquiryForm() {
                 Current Language Proficiency
               </label>
 
-              <select
+              <PremiumSelect
                 id="proficiency"
                 name="proficiency"
                 value={formData.proficiency}
-                onChange={(e) =>
-                  updateField("proficiency", e.target.value)
-                }
-                className={`${inputClass} cursor-pointer`}
-              >
-                <option value="" disabled>
-                  Select your current level
-                </option>
-
-                {proficiencyLevels.map((level) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => updateField("proficiency", val)}
+                options={proficiencyOptions}
+                placeholder="Select your current level"
+              />
             </div>
 
             <div className="sm:col-span-2">

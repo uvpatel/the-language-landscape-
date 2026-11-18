@@ -187,10 +187,10 @@ export function Footer() {
           <p>© {year ?? 2026} The Language Landscape. All rights reserved.</p>
 
           <div className="flex flex-wrap items-center gap-x-7 gap-y-2">
-            <Link href="/privacy-policy" className="transition-colors hover:text-[#A32429]">
+            <Link href="/legal#privacy-policy" className="transition-colors hover:text-[#A32429]">
               Privacy Policy
             </Link>
-            <Link href="/terms-and-conditions" className="transition-colors hover:text-[#A32429]">
+            <Link href="/legal#terms-and-conditions" className="transition-colors hover:text-[#A32429]">
               Terms & Conditions
             </Link>
             <p className="font-serif text-base tracking-normal text-[#A32429]">

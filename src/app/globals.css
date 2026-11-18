@@ -107,3 +107,26 @@ button {
 img {
   max-width: 100%;
 }
+
+/* Custom luxury scrollbar for dropdowns */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #D9CFC2 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #D9CFC2;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #A58B64;
+}

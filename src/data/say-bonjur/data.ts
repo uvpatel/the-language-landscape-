@@ -1,4 +1,10 @@
 
+export interface FormOption {
+  value: string;
+  label: string;
+  description?: string;
+}
+
 export const programs = [
   "TEF & TCF Preparation",
   "DELF Preparation",
@@ -10,6 +16,49 @@ export const programs = [
   "Collaboration",
 ];
 
+export const programOptions: FormOption[] = [
+  {
+    value: "TEF & TCF Preparation",
+    label: "TEF & TCF Preparation",
+    description: "Targeted training for Canada immigration, PR & citizenship exams",
+  },
+  {
+    value: "DELF Preparation",
+    label: "DELF Preparation",
+    description: "Internationally recognized French diplomas (A1 to C2 certification)",
+  },
+  {
+    value: "Kids Program",
+    label: "Kids Program",
+    description: "Immersive, engaging French learning designed for young minds",
+  },
+  {
+    value: "Corporate Training",
+    label: "Corporate Training",
+    description: "Customized business French programs for teams and enterprises",
+  },
+  {
+    value: "Teachers Training",
+    label: "Teachers Training",
+    description: "Advanced pedagogy, teaching methodology & classroom skills",
+  },
+  {
+    value: "Explore More Languages",
+    label: "Explore More Languages",
+    description: "Spanish, German, and multilingual tracks with expert mentors",
+  },
+  {
+    value: "General Enquiry",
+    label: "General Enquiry",
+    description: "Schedules, fee structure, personalized consultations & questions",
+  },
+  {
+    value: "Collaboration",
+    label: "Collaboration",
+    description: "Institutional partnerships, cultural events & workshops",
+  },
+];
+
 export const proficiencyLevels = [
   "Complete Beginner",
   "Beginner (A1)",
@@ -18,6 +67,44 @@ export const proficiencyLevels = [
   "Upper Intermediate (B2)",
   "Advanced (C1/C2)",
   "Not Sure",
+];
+
+export const proficiencyOptions: FormOption[] = [
+  {
+    value: "Complete Beginner",
+    label: "Complete Beginner",
+    description: "No prior background; starting your French journey from scratch",
+  },
+  {
+    value: "Beginner (A1)",
+    label: "Beginner (A1)",
+    description: "Can understand and use simple everyday phrases and introductions",
+  },
+  {
+    value: "Elementary (A2)",
+    label: "Elementary (A2)",
+    description: "Can communicate in routine tasks and discuss personal background",
+  },
+  {
+    value: "Intermediate (B1)",
+    label: "Intermediate (B1)",
+    description: "Can express opinions, narrate experiences, and handle travel needs",
+  },
+  {
+    value: "Upper Intermediate (B2)",
+    label: "Upper Intermediate (B2)",
+    description: "Can converse fluently and spontaneously with native speakers",
+  },
+  {
+    value: "Advanced (C1/C2)",
+    label: "Advanced (C1/C2)",
+    description: "Near-native fluency, complex texts, and professional nuance",
+  },
+  {
+    value: "Not Sure",
+    label: "Not Sure",
+    description: "We will evaluate your level together during an initial assessment",
+  },
 ];
 
 export const faqGroups = [
