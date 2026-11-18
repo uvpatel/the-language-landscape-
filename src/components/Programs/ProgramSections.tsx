@@ -1,6 +1,6 @@
 import React from "react";
 import { programs } from "@/data/programs";
-import { ProgramCard } from "./ProgramCard";
+import ProgramCard from "./ProgramCard";
 
 export default function ProgramSections() {
   return (
