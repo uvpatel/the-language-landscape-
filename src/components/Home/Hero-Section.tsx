@@ -1,13 +1,20 @@
-
 "use client";
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import {
-  IconArrowDown,
-  IconArrowUpRight,
-} from "@tabler/icons-react";
+import { IconArrowDown, IconArrowUpRight } from "@tabler/icons-react";
+
+// Fades all four edges fully to transparent before they reach the box edge
+const edgeFade = {
+  maskImage:
+    "linear-gradient(to right, transparent 0%, #000 25%, #000 75%, transparent 100%), linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%)",
+  WebkitMaskImage:
+    "linear-gradient(to right, transparent 0%, #000 25%, #000 75%, transparent 100%), linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%)",
+  maskComposite: "intersect",
+  WebkitMaskComposite: "source-in",
+} as CSSProperties;
 
 const expressions = [
   {
@@ -184,7 +191,7 @@ export default function HeroSection() {
               <div className="absolute inset-[8%] rounded-full bg-[#D9C6A5]/25 blur-[70px]" />
 
               {/* Main photograph */}
-              <div className="absolute inset-0 overflow-hidden [mask-image:radial-gradient(ellipse_68%_72%_at_50%_50%,black_48%,transparent_100%)]">
+              <div className="absolute inset-0" style={edgeFade}>
                 <Image
                   src="/french-learning.png"
                   alt="French language textbooks, vocabulary notes and learning materials"
@@ -196,8 +203,6 @@ export default function HeroSection() {
 
                 {/* Warm color blending */}
                 <div className="absolute inset-0 bg-[#EFE9DF]/15 mix-blend-soft-light" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#F8F5EF]/40 via-transparent to-[#F8F5EF]/20" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#F8F5EF]/30 via-transparent to-[#F8F5EF]/25" />
               </div>
 
               {/* Floating language expressions */}
@@ -250,11 +255,7 @@ export default function HeroSection() {
 
         {/* Bottom scroll indicator */}
         <div className="mt-20 flex items-center justify-center gap-3 pt-6 sm:mt-24">
-          <IconArrowDown
-            size={15}
-            stroke={1.5}
-            className="text-[#B32526]"
-          />
+          <IconArrowDown size={15} stroke={1.5} className="text-[#B32526]" />
           <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#81766C]">
             Explore the language landscape
           </span>
