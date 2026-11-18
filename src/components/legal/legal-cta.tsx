@@ -8,7 +8,7 @@ export function LegalCta() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section className="bg-[#8A2424] px-6 py-20 sm:px-10 sm:py-28 lg:px-16">
+    <section className="mt-4 bg-[#8A2424] px-6 py-20 sm:px-10 sm:py-28 lg:px-16">
       <div className="mx-auto max-w-[1440px]">
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
