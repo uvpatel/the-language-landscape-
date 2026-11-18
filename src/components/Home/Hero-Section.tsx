@@ -1,128 +1,202 @@
 "use client";
 
-import type { CSSProperties } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import type { PointerEvent } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import { IconArrowDown, IconArrowUpRight } from "@tabler/icons-react";
 
-// Fades all four edges fully to transparent before they reach the box edge
-const edgeFade = {
-  maskImage:
-    "linear-gradient(to right, transparent 0%, #000 25%, #000 75%, transparent 100%), linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%)",
-  WebkitMaskImage:
-    "linear-gradient(to right, transparent 0%, #000 25%, #000 75%, transparent 100%), linear-gradient(to bottom, transparent 0%, #000 25%, #000 75%, transparent 100%)",
-  maskComposite: "intersect",
-  WebkitMaskComposite: "source-in",
-} as CSSProperties;
+const ease = [0.22, 1, 0.36, 1] as const;
 
-const expressions = [
+const greetings = [
+  { word: "Bonjour.", lang: "French" },
+  { word: "Hello.", lang: "English" },
+  { word: "नमस्ते", lang: "Hindi" },
+  { word: "Hola.", lang: "Spanish" },
+  { word: "Hallo.", lang: "German" },
+  { word: "Ciao.", lang: "Italian" },
+];
+
+const centerColors = ["#B32526", "#781E24", "#A58B64"];
+
+const languageChip =
+  "whitespace-nowrap rounded-full bg-[#F8F5EF] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#292624] shadow-[0_10px_28px_rgba(41,38,36,0.09)] sm:text-xs";
+
+const pillarChip =
+  "whitespace-nowrap rounded-full bg-[#B32526]/10 px-3 py-1.5 font-[family-name:var(--font-heading)] text-sm italic text-[#781E24] sm:text-base";
+
+const outerItems = [
+  { label: "French", className: languageChip },
+  { label: "English", className: languageChip },
+  { label: "German", className: languageChip },
+  { label: "Hindi", className: languageChip },
+  { label: "Spanish", className: languageChip },
   {
-    word: "Bonjour",
-    language: "French",
-    position: "top-[12%] left-[4%]",
-    rotate: "-rotate-6",
-  },
-  {
-    word: "नमस्ते",
-    language: "Hindi",
-    position: "top-[30%] right-[0%]",
-    rotate: "rotate-6",
-  },
-  {
-    word: "Hello",
-    language: "English",
-    position: "bottom-[28%] left-[0%]",
-    rotate: "rotate-3",
-  },
-  {
-    word: "Hola",
-    language: "Spanish",
-    position: "bottom-[12%] right-[7%]",
-    rotate: "-rotate-6",
+    label: "More",
+    className:
+      "whitespace-nowrap rounded-full bg-[#D9C6A5] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#781E24] shadow-[0_10px_28px_rgba(165,139,100,0.3)] sm:text-xs",
   },
 ];
 
-export default function HeroSection() {
-  const shouldReduceMotion = useReducedMotion();
+const innerItems = [
+  { label: "Listening", className: pillarChip },
+  { label: "Speaking", className: pillarChip },
+  { label: "Reading", className: pillarChip },
+  { label: "Writing", className: pillarChip },
+  { label: "Grammar", className: pillarChip },
+];
 
-  const reveal = {
-    hidden: {
-      opacity: 0,
-      y: shouldReduceMotion ? 0 : 24,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-    },
-  };
+/**
+ * A ring of labels that rotates around the centre.
+ * Each label counter-rotates so the text always stays upright.
+ */
+function Orbit({
+  items,
+  inset,
+  duration,
+  reverse = false,
+  reduce,
+}: {
+  items: { label: string; className: string }[];
+  inset: string;
+  duration: number;
+  reverse?: boolean;
+  reduce: boolean | null;
+}) {
+  const dir = reverse ? -1 : 1;
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#F8F5EF]">
-      {/* Decorative background */}
-      <div className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-[#B32526]/[0.025] blur-3xl" />
+    <motion.div
+      aria-hidden
+      className="absolute"
+      style={{ inset }}
+      animate={reduce ? undefined : { rotate: 360 * dir }}
+      transition={{ duration, repeat: Infinity, ease: "linear" }}
+    >
+      {items.map((item, i) => {
+        const angle = (360 / items.length) * i;
 
-      <div className="mx-auto max-w-[1440px] px-6 pb-16 pt-20 sm:px-10 sm:pb-20 sm:pt-24 lg:px-16 lg:pb-24 lg:pt-28">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
-          {/* Hero content */}
+        return (
+          <div
+            key={item.label}
+            className="absolute inset-0"
+            style={{ transform: `rotate(${angle}deg)` }}
+          >
+            <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+              <motion.div
+                initial={{ rotate: -angle }}
+                animate={
+                  reduce
+                    ? { rotate: -angle }
+                    : { rotate: [-angle, -angle - 360 * dir] }
+                }
+                transition={{ duration, repeat: Infinity, ease: "linear" }}
+                className={item.className}
+              >
+                {item.label}
+              </motion.div>
+            </div>
+          </div>
+        );
+      })}
+    </motion.div>
+  );
+}
+
+export default function HeroSection() {
+  const shouldReduceMotion = useReducedMotion();
+  const [index, setIndex] = useState(0);
+
+  /* Cycle the greeting in the centre */
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    const id = setInterval(
+      () => setIndex((i) => (i + 1) % greetings.length),
+      2400
+    );
+    return () => clearInterval(id);
+  }, [shouldReduceMotion]);
+
+  /* Cursor parallax */
+  const rawX = useMotionValue(0.5);
+  const rawY = useMotionValue(0.5);
+  const pointerX = useSpring(rawX, { stiffness: 70, damping: 18 });
+  const pointerY = useSpring(rawY, { stiffness: 70, damping: 18 });
+
+  const wheelX = useTransform(pointerX, [0, 1], [-12, 12]);
+  const wheelY = useTransform(pointerY, [0, 1], [-12, 12]);
+  const dotAX = useTransform(pointerX, [0, 1], [-30, 30]);
+  const dotAY = useTransform(pointerY, [0, 1], [-30, 30]);
+  const dotBX = useTransform(pointerX, [0, 1], [40, -40]);
+  const dotBY = useTransform(pointerY, [0, 1], [28, -28]);
+
+  const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
+    if (shouldReduceMotion || event.pointerType !== "mouse") return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    rawX.set((event.clientX - rect.left) / rect.width);
+    rawY.set((event.clientY - rect.top) / rect.height);
+  };
+
+  const handlePointerLeave = () => {
+    rawX.set(0.5);
+    rawY.set(0.5);
+  };
+
+  const current = greetings[index];
+  const centerColor = centerColors[index % centerColors.length];
+
+  return (
+    <section
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative isolate overflow-hidden bg-[#F8F5EF]"
+    >
+      {/* Background atmosphere */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-[#B32526]/[0.04] blur-3xl" />
+        <div className="absolute -bottom-48 left-[30%] h-[500px] w-[500px] rounded-full bg-[#D9C6A5]/25 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-[1440px] px-6 pb-12 pt-20 sm:px-10 sm:pt-24 lg:px-16 lg:pb-16 lg:pt-28">
+        <div className="grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+          {/* Copy */}
           <div className="relative z-10">
             <motion.div
-              variants={reveal}
-              initial="hidden"
-              animate="visible"
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease }}
               className="mb-8 flex items-center gap-3"
             >
               <span className="h-px w-10 bg-[#B32526]" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#81766C]">
-                Language · Culture · Connection
+                The Language Landscapes
               </span>
             </motion.div>
 
             <motion.h1
-              variants={reveal}
-              initial="hidden"
-              animate="visible"
-              transition={{
-                duration: 0.85,
-                delay: 0.1,
-                ease: "easeOut",
-              }}
-              className="max-w-[800px] font-[family-name:var(--font-heading)] text-[clamp(3.3rem,6.3vw,6.6rem)] leading-[0.98] tracking-[-0.045em] text-[#292624]"
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1, ease }}
+              className="font-[family-name:var(--font-heading)] text-[clamp(2.2rem,3.8vw,3.6rem)] leading-[1.08] tracking-[-0.03em] text-[#292624]"
             >
-              We speak in many expressions,
-              <span className="mt-2 block text-[#B32526]">
-                but our message is one.
+              We speak in many expressions, but our message is one:
+              <span className="mt-3 block text-[clamp(3.4rem,7vw,7rem)] italic leading-[0.95] tracking-[-0.045em] text-[#B32526]">
+                Unity through language.
               </span>
             </motion.h1>
 
-            <motion.div
-              variants={reveal}
-              initial="hidden"
-              animate="visible"
-              transition={{
-                duration: 0.75,
-                delay: 0.25,
-                ease: "easeOut",
-              }}
-              className="mt-7 flex items-center gap-4"
-            >
-              <span className="h-px w-8 bg-[#A58B64]" />
-              <p className="font-[family-name:var(--font-heading)] text-2xl text-[#B32526] sm:text-3xl">
-                Unity through language.
-              </p>
-            </motion.div>
-
             <motion.p
-              variants={reveal}
-              initial="hidden"
-              animate="visible"
-              transition={{
-                duration: 0.75,
-                delay: 0.35,
-                ease: "easeOut",
-              }}
-              className="mt-7 max-w-[540px] text-base leading-8 text-[#514A45] sm:text-lg sm:leading-9"
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease }}
+              className="mt-8 max-w-[540px] text-base leading-8 text-[#514A45] sm:text-lg sm:leading-9"
             >
               Discover the world through languages, cultures and human
               expression. Begin your journey with The Language Landscapes,
@@ -131,14 +205,9 @@ export default function HeroSection() {
             </motion.p>
 
             <motion.div
-              variants={reveal}
-              initial="hidden"
-              animate="visible"
-              transition={{
-                duration: 0.75,
-                delay: 0.45,
-                ease: "easeOut",
-              }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.45, ease }}
               className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center"
             >
               <Link
@@ -167,98 +236,109 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Editorial visual */}
+          {/* Language wheel */}
           <motion.div
-            initial={{
-              opacity: 0,
-              scale: shouldReduceMotion ? 1 : 0.96,
-              y: shouldReduceMotion ? 0 : 20,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 1,
-              delay: 0.2,
-              ease: "easeOut",
-            }}
-            className="relative mx-auto w-full max-w-[600px]"
+            aria-hidden
+            initial={
+              shouldReduceMotion ? false : { opacity: 0, scale: 0.92 }
+            }
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.1, delay: 0.2, ease }}
+            className="relative mx-auto w-full max-w-[580px]"
           >
-            <div className="relative aspect-[0.95] w-full">
-              {/* Soft background glow */}
-              <div className="absolute inset-[8%] rounded-full bg-[#D9C6A5]/25 blur-[70px]" />
+            <div className="relative aspect-square w-full">
+              {/* Accent dots, drift with the cursor at different depths */}
+              <motion.div
+                style={shouldReduceMotion ? undefined : { x: dotAX, y: dotAY }}
+                className="absolute right-[4%] top-[6%] z-20 h-6 w-6 rounded-full bg-[#A58B64]"
+              />
+              <motion.div
+                style={shouldReduceMotion ? undefined : { x: dotBX, y: dotBY }}
+                className="absolute bottom-[8%] left-[6%] z-20 h-3.5 w-3.5 rounded-full bg-[#B32526]"
+              />
+              <motion.div
+                style={shouldReduceMotion ? undefined : { x: dotAX, y: dotBY }}
+                className="absolute bottom-[4%] right-[12%] z-20 h-12 w-12 rounded-full bg-[#781E24]/90"
+              />
 
-              {/* Main photograph */}
-              <div className="absolute inset-0" style={edgeFade}>
-                <Image
-                  src="/french-learning.png"
-                  alt="French language textbooks, vocabulary notes and learning materials"
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover object-center"
+              <motion.div
+                style={
+                  shouldReduceMotion ? undefined : { x: wheelX, y: wheelY }
+                }
+                className="absolute inset-0"
+              >
+                {/* Soft concentric discs (no borders) */}
+                <div className="absolute inset-0 rounded-full bg-[#EFE9DF]/45" />
+                <div className="absolute inset-[13%] rounded-full bg-[#EFE9DF]/70" />
+                <div className="absolute inset-[26%] rounded-full bg-[#EFE9DF]" />
+
+                {/* Outer orbit: languages */}
+                <Orbit
+                  items={outerItems}
+                  inset="2%"
+                  duration={70}
+                  reduce={shouldReduceMotion}
                 />
 
-                {/* Warm color blending */}
-                <div className="absolute inset-0 bg-[#EFE9DF]/15 mix-blend-soft-light" />
-              </div>
+                {/* Inner orbit: the five learning pillars */}
+                <Orbit
+                  items={innerItems}
+                  inset="20%"
+                  duration={55}
+                  reverse
+                  reduce={shouldReduceMotion}
+                />
 
-              {/* Floating language expressions */}
-              {expressions.map((item, index) => (
+                {/* Centre: cycling greeting */}
                 <motion.div
-                  key={item.word}
-                  initial={{
-                    opacity: 0,
-                    y: shouldReduceMotion ? 0 : 12,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    duration: 0.6,
-                    delay: shouldReduceMotion ? 0 : 0.5 + index * 0.12,
-                  }}
-                  className={`absolute ${item.position} ${item.rotate} z-10`}
+                  animate={{ backgroundColor: centerColor }}
+                  transition={{ duration: 0.8, ease }}
+                  className="absolute inset-[34%] z-10 flex items-center justify-center rounded-full shadow-[0_24px_60px_rgba(120,30,36,0.25)]"
                 >
-                  <div className="px-3 py-2 sm:px-5 sm:py-3">
-                    <p className="font-[family-name:var(--font-heading)] text-2xl text-[#B32526] sm:text-3xl">
-                      {item.word}
-                    </p>
-                    <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#81766C]">
-                      {item.language}
-                    </p>
+                  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden text-center">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={current.word}
+                        initial={
+                          shouldReduceMotion
+                            ? false
+                            : { opacity: 0, y: 16, filter: "blur(4px)" }
+                        }
+                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        exit={
+                          shouldReduceMotion
+                            ? undefined
+                            : { opacity: 0, y: -16, filter: "blur(4px)" }
+                        }
+                        transition={{ duration: 0.5, ease }}
+                      >
+                        <p className="font-[family-name:var(--font-heading)] text-[clamp(1.6rem,4vw,2.8rem)] italic leading-none text-white">
+                          {current.word}
+                        </p>
+                        <p className="mt-2 text-[9px] font-semibold uppercase tracking-[0.22em] text-white/75">
+                          {current.lang}
+                        </p>
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </motion.div>
-              ))}
-
-              {/* Subtle decorative accent */}
-              <div className="absolute right-[17%] top-[15%] h-2 w-2 rounded-full bg-[#B32526]/70" />
-              <div className="absolute bottom-[18%] left-[18%] h-1.5 w-1.5 rounded-full bg-[#A58B64]" />
+              </motion.div>
             </div>
-
-            {/* Caption */}
-            <motion.div
-              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.6 }}
-              className="mt-2 flex items-center justify-center"
-            >
-              <p className="font-[family-name:var(--font-heading)] text-lg text-[#81766C]">
-                Every expression carries meaning.
-              </p>
-            </motion.div>
           </motion.div>
         </div>
 
-        {/* Bottom scroll indicator */}
-        <div className="mt-20 flex items-center justify-center gap-3 pt-6 sm:mt-24">
-          <IconArrowDown size={15} stroke={1.5} className="text-[#B32526]" />
-          <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#81766C]">
-            Explore the language landscape
-          </span>
+        {/* Bottom bar */}
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 pt-6 sm:mt-20 sm:flex-row">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#81766C]">
+            Step in curious. Step out multilingual.
+          </p>
+
+          <div className="flex items-center gap-3">
+            <IconArrowDown size={15} stroke={1.5} className="text-[#B32526]" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#81766C]">
+              Explore the language landscape
+            </span>
+          </div>
         </div>
       </div>
     </section>
