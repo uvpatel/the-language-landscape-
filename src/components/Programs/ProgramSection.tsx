@@ -3,9 +3,9 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import ProgramCard from "@/components/Programs/ProgramCard";
-import { programs } from "@/data/programs";
+import { programs, type Program } from "@/data/programs";
 
-export default function ProgramSections() {
+export default function ProgramSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -38,7 +38,7 @@ export default function ProgramSections() {
         </motion.div>
 
         <div className="space-y-8 md:space-y-12">
-          {programs.map((program, index) => (
+          {programs.map((program: Program, index: number) => (
             <ProgramCard
               key={program.id}
               program={program}
@@ -50,3 +50,5 @@ export default function ProgramSections() {
     </section>
   );
 }
+
+export { ProgramSection, ProgramSection as ProgramSections };
