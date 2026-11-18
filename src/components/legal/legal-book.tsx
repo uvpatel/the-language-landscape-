@@ -17,7 +17,6 @@ import {
   IconUserCheck,
 } from "@tabler/icons-react";
 import { LegalBookPage } from "./legal-book-page";
-import { LegalBookControls } from "./legal-book-controls";
 import {
   termsAndConditions,
   privacyPolicy,
@@ -29,7 +28,6 @@ export function LegalBook() {
   const [currentSpread, setCurrentSpread] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [mobilePageMode, setMobilePageMode] = useState<"left" | "right">("left");
-  const [progressPercent, setProgressPercent] = useState(0);
 
   const shouldReduceMotion = useReducedMotion();
   const totalSpreads = 8;
@@ -41,8 +39,6 @@ export function LegalBook() {
   });
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    setProgressPercent(latest * 100);
-
     // Map scroll progress across the runway to current spread
     const rawSpread = Math.floor(latest * totalSpreads);
     const targetSpread = Math.min(totalSpreads - 1, Math.max(0, rawSpread));
@@ -76,15 +72,6 @@ export function LegalBook() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [totalSpreads]);
 
-  const getChapterTitle = () => {
-    if (currentSpread === 0) return "Hardcover Edition";
-    if (currentSpread >= 1 && currentSpread <= 3)
-      return "Chapter One: Terms & Conditions";
-    if (currentSpread >= 4 && currentSpread <= 6)
-      return "Chapter Two: Privacy Policy";
-    return "Official Colophon & Inquiries";
-  };
-
   return (
     <div
       ref={runwayRef}
@@ -95,32 +82,52 @@ export function LegalBook() {
       <div id="terms-and-conditions" className="absolute top-[13%] -scroll-mt-10" />
       <div id="privacy-policy" className="absolute top-[51%] -scroll-mt-10" />
 
-      {/* Sticky Book Container */}
-      <div className="sticky top-20 sm:top-24 flex h-[calc(100vh-5.5rem)] sm:h-[calc(100vh-6.5rem)] max-h-[820px] w-full flex-col items-center justify-center px-4 sm:px-8 lg:px-14">
+      {/* Sticky Book Container - Perfectly Centered in Reading Section */}
+      <div className="sticky top-20 lg:top-[82px] flex h-[calc(100vh-5rem)] lg:h-[calc(100vh-82px)] w-full flex-col items-center justify-center px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* Book Outer Presentation Canvas */}
-        <div className="relative mx-auto w-full max-w-[1140px]">
-          {/* Layered Physical Book Edges (Simulating 300-Page Stacked Leaves) */}
+        <div className="relative mx-auto w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:w-[92vw] lg:max-w-[1500px] xl:w-[88vw] xl:max-w-[1500px]">
+          {/* Soft ground ambient shadow */}
           <div
             aria-hidden="true"
-            className="absolute -bottom-2.5 inset-x-3 h-3 rounded-b-sm border-x border-b border-[#292724]/15 bg-[#F0EBE1] shadow-xs"
+            className="pointer-events-none absolute -bottom-8 lg:-bottom-10 inset-x-6 sm:inset-x-12 lg:inset-x-16 h-10 -z-10 rounded-full bg-[#292724]/15 blur-2xl"
           />
+
+          {/* Hardcover bottom outer casing base */}
           <div
             aria-hidden="true"
-            className="absolute -bottom-5 inset-x-6 h-3 rounded-b-sm border-x border-b border-[#292724]/10 bg-[#E8E1D5] shadow-xs"
+            className="absolute -bottom-6 lg:-bottom-7 inset-x-5 sm:inset-x-8 lg:inset-x-10 h-3 rounded-b-sm border-x border-b border-[#292724]/20 bg-[#292724]/90 shadow-md"
+          />
+
+          {/* Paper stack leaf layer 2 (deep pages) */}
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-4 lg:-bottom-4.5 inset-x-3.5 sm:inset-x-5 lg:inset-x-7 h-3 rounded-b-sm border-x border-b border-[#292724]/15 bg-gradient-to-b from-[#EAE2D4] to-[#DFD5C4] shadow-xs"
+          />
+
+          {/* Paper stack leaf layer 1 (upper pages immediately beneath the opening) */}
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-2 lg:-bottom-2.5 inset-x-2 sm:inset-x-3 lg:inset-x-4 h-2.5 rounded-b-sm border-x border-b border-[#292724]/20 bg-gradient-to-b from-[#F4EFE6] to-[#EAE3D6] shadow-xs"
           />
 
           {/* The Open Hardcover Book Shell */}
-          <div className="relative h-[68vh] min-h-[520px] max-h-[660px] overflow-hidden rounded-sm border border-[#292724]/15 bg-[#FFFFFF] shadow-[0_20px_50px_rgba(41,39,36,0.08)]">
+          <div className="relative w-full h-[68vh] min-h-[500px] max-h-[620px] lg:h-[76vh] lg:min-h-[650px] lg:max-h-[800px] xl:h-[80vh] xl:min-h-[650px] xl:max-h-[800px] overflow-hidden rounded-sm border border-[#292724]/20 bg-[#FFFFFF] shadow-[0_25px_60px_-15px_rgba(41,39,36,0.18),0_12px_24px_-8px_rgba(41,39,36,0.08)]">
             {/* Central Book Spine Crease & Shadow Gutter (Desktop only) */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-1/2 z-30 hidden w-10 -translate-x-1/2 bg-gradient-to-r from-black/[0.06] via-black/[0.12] to-black/[0.06] lg:block"
+              className="pointer-events-none absolute inset-y-0 left-1/2 z-30 hidden w-14 xl:w-20 -translate-x-1/2 bg-gradient-to-r from-transparent via-black/[0.14] to-transparent lg:block"
             />
 
-            {/* Central Vertical Spine Line */}
+            {/* Central Vertical Spine Line & Seam */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-1/2 z-30 hidden w-px -translate-x-1/2 bg-[#292724]/20 lg:block"
+              className="pointer-events-none absolute inset-y-0 left-1/2 z-30 hidden w-px -translate-x-1/2 bg-[#292724]/30 shadow-[0_0_8px_rgba(0,0,0,0.15)] lg:block"
+            />
+
+            {/* Central Spine Groove Stitching Accent */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-1/2 z-30 hidden w-1.5 -translate-x-1/2 bg-gradient-to-r from-black/[0.08] via-transparent to-black/[0.08] lg:block"
             />
 
             {/* Animated 3D Spread Container */}
@@ -163,7 +170,7 @@ export function LegalBook() {
                       }`}
                     >
                       <LegalBookPage side="left" isCover>
-                        <div className="flex h-full flex-col justify-between border border-[#292724]/10 bg-[#FDFCFA] p-8 sm:p-10">
+                        <div className="flex h-full flex-col justify-between border border-[#292724]/10 bg-[#FDFCFA] p-8 sm:p-10 lg:p-12 xl:p-14">
                           <div>
                             <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#81766C]">
                               ACADEMIC REPOSITORY
@@ -197,7 +204,7 @@ export function LegalBook() {
                       }`}
                     >
                       <LegalBookPage side="right" isCover>
-                        <div className="flex h-full flex-col justify-between border-2 border-[#8A2424]/30 bg-[#FFFFFF] p-8 sm:p-12 shadow-xs">
+                        <div className="flex h-full flex-col justify-between border-2 border-[#8A2424]/30 bg-[#FFFFFF] p-8 sm:p-12 lg:p-14 xl:p-16 shadow-xs">
                           <div>
                             <div className="flex items-center gap-2">
                               <IconBookmark
@@ -209,7 +216,7 @@ export function LegalBook() {
                               </span>
                             </div>
 
-                            <h2 className="mt-8 font-[family-name:var(--font-heading)] text-4xl font-medium leading-[1.1] text-[#292724] sm:text-5xl">
+                            <h2 className="mt-8 font-[family-name:var(--font-heading)] text-4xl font-medium leading-[1.1] text-[#292724] sm:text-5xl lg:text-6xl">
                               Legal &amp; Policies
                             </h2>
 
@@ -924,7 +931,7 @@ export function LegalBook() {
                         runningHeader="THE LANGUAGE LANDSCAPES"
                         side="right"
                       >
-                        <div className="flex h-full flex-col justify-between border-2 border-[#8A2424]/30 bg-[#FFFFFF] p-6 sm:p-10">
+                        <div className="flex h-full flex-col justify-between border-2 border-[#8A2424]/30 bg-[#FFFFFF] p-6 sm:p-10 lg:p-12 xl:p-14">
                           <div>
                             <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8A2424]">
                               DIRECT SUPPORT
