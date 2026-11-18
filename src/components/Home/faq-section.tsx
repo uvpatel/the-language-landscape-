@@ -153,7 +153,7 @@ export default function FAQSection() {
 
             <h2 className="max-w-3xl font-[family-name:var(--font-heading)] text-5xl leading-[1.05] text-[#292624] sm:text-6xl lg:text-7xl">
               Questions are the
-              <span className="text-[#B32526] italic"> beginning.</span>
+              <span className="text-[#B32526]"> beginning.</span>
             </h2>
           </div>
 

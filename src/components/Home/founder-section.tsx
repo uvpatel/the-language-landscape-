@@ -140,7 +140,7 @@ export function FounderSection() {
                 }}
                 className="rounded-xl border border-[#D9CFC2] bg-[#F8F5EF] px-6 py-5 shadow-lg shadow-[#292624]/5"
               >
-                <p className="font-[family-name:var(--font-heading)] text-2xl italic text-[#B32526]">
+                <p className="font-[family-name:var(--font-heading)] text-2xl text-[#B32526]">
                   The vision behind TLL.
                 </p>
               </motion.div>
@@ -172,7 +172,7 @@ export function FounderSection() {
               <span className="block overflow-hidden pb-2">
                 <motion.span
                   variants={lineReveal}
-                  className="block italic text-[#B32526]"
+                  className="block text-[#B32526]"
                 >
                   learning and inclusion.
                 </motion.span>

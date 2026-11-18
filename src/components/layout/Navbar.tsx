@@ -9,13 +9,14 @@ import {
   IconMenu2,
   IconX,
 } from "@tabler/icons-react";
+import { label } from "motion/react-client";
 
 const navLinks = [
   { label: "About", href: "/about" },
   { label: "Programs", href: "/programs" },
-  { label: "Our Approach", href: "/approach" },
-  { label: "Tête-à-tête", href: "/tete-a-tete" },
-  { label: "Contact", href: "/contact" },
+  {label: "Blog", href: "/blog" },
+  { label: "Say Bonjour", href: "/contact" },
+  {label: "Legal", href: "/legal" },
 ];
 
 export function Navbar() {
@@ -66,7 +67,7 @@ export function Navbar() {
             href="#contact"
             className="group inline-flex items-center gap-2 rounded-sm bg-[#B32526] px-5 py-3 text-[13px] font-medium text-white transition-all duration-300 hover:bg-[#781E24]"
           >
-            Start your journey
+            Let's Talk
             <IconArrowUpRight
               size={16}
               stroke={1.8}
@@ -122,7 +123,7 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
               className="mt-6 flex w-full items-center justify-center gap-2 bg-[#B32526] px-5 py-4 text-sm font-medium text-white transition-colors hover:bg-[#781E24]"
             >
-              Start your journey
+              Let's Talk
               <IconArrowUpRight size={18} />
             </Link>
 

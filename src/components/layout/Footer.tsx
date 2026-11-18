@@ -17,8 +17,9 @@ import { motion, useReducedMotion } from "motion/react";
 const navigation = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Courses", href: "/courses" },
-  { label: "FAQs", href: "/#faqs" },
+  { label: "Programms", href: "/programs" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -159,7 +160,7 @@ export function Footer() {
                 className="flex items-start gap-4 transition-colors hover:text-[#A32429]"
               >
                 <IconPhone size={18} stroke={1.5} className="mt-1 shrink-0" />
-                <span>Call us</span>
+                <span>+91 6353 145 434</span>
               </a>
               <a
                 href="#contact"
@@ -192,7 +193,7 @@ export function Footer() {
             <Link href="/terms-and-conditions" className="transition-colors hover:text-[#A32429]">
               Terms & Conditions
             </Link>
-            <p className="font-serif text-base italic tracking-normal text-[#A32429]">
+            <p className="font-serif text-base tracking-normal text-[#A32429]">
               A world beyond words.
             </p>
           </div>

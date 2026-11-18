@@ -128,7 +128,7 @@ export default function FinalCTASection() {
                   },
                   rotate: { duration: 0.8, ease },
                 }}
-                className={`absolute ${item.position} ${item.rotate} font-[family-name:var(--font-heading)] text-2xl italic text-[#D9C6A5]`}
+                className={`absolute ${item.position} ${item.rotate} font-[family-name:var(--font-heading)] text-2xl text-[#D9C6A5]`}
               >
                 {item.word}.
               </motion.span>
@@ -170,7 +170,7 @@ export default function FinalCTASection() {
             >
               Every language
               <br />
-              <span className="italic text-[#D9C6A5]">
+              <span className="text-[#D9C6A5]">
                 opens a new world.
               </span>
             </motion.h2>
@@ -209,7 +209,7 @@ export default function FinalCTASection() {
               transition={{ duration: 0.3, ease }}
               className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#F8F5EF] px-8 py-4 text-sm font-semibold text-[#781E24] transition-colors duration-300 hover:bg-[#D9C6A5] sm:w-auto"
             >
-              Start your journey
+              Let's Talk
               <IconArrowUpRight
                 size={19}
                 className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
@@ -261,7 +261,7 @@ export default function FinalCTASection() {
               </p>
             </div>
 
-            <p className="font-[family-name:var(--font-heading)] text-xl italic text-[#D9C6A5]">
+            <p className="font-[family-name:var(--font-heading)] text-xl text-[#D9C6A5]">
               Step in curious. Step out multilingual.
             </p>
           </div>

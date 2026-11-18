@@ -130,7 +130,7 @@ export function IntroductionSection() {
 
               <motion.span
                 variants={revealVariants}
-                className="mt-2 block italic text-[#B32526]"
+                className="mt-2 block text-[#B32526]"
               >
                 It is everything we express.
               </motion.span>

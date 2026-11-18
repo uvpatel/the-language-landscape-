@@ -54,7 +54,7 @@ export default function FAQSection() {
           <h2 className="font-[family-name:var(--font-heading)] text-5xl leading-[1.08] text-[#292624] sm:text-6xl lg:text-7xl">
             A little clarity
             <br />
-            <span className="italic text-[#B32526]">
+            <span className="text-[#B32526]">
               goes a long way.
             </span>
           </h2>

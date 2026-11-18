@@ -57,7 +57,7 @@ export default function NotFound() {
         {/* Footer note */}
         <div className="mt-20 flex items-center gap-3">
           <span className="h-px w-10 bg-[#D9C7B5]" />
-          <p className="font-serif text-sm italic text-[#A18F7D]">
+          <p className="font-serif text-sm text-[#A18F7D]">
             Every journey begins with a word.
           </p>
           <span className="h-px w-10 bg-[#D9C7B5]" />

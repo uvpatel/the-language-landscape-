@@ -85,7 +85,7 @@ export default function WhyChooseTLLSection() {
             <h2 className="max-w-3xl font-[family-name:var(--font-heading)] text-5xl leading-[1.05] text-[#F8F5EF] sm:text-6xl lg:text-7xl">
               More than learning.
               <br />
-              <span className="italic text-[#D9C6A5]">
+              <span className="text-[#D9C6A5]">
                 A way of connecting.
               </span>
             </h2>
@@ -123,7 +123,7 @@ export default function WhyChooseTLLSection() {
 
               <h3 className="max-w-xl font-[family-name:var(--font-heading)] text-4xl leading-tight sm:text-5xl lg:text-6xl">
                 Every learner has a voice.
-                <span className="italic text-[#D9C6A5]">
+                <span className="text-[#D9C6A5]">
                   {" "}Every voice matters.
                 </span>
               </h3>
@@ -222,7 +222,7 @@ export default function WhyChooseTLLSection() {
 
               <p className="max-w-3xl font-[family-name:var(--font-heading)] text-3xl leading-snug text-[#F8F5EF] sm:text-4xl">
                 Step in curious.
-                <span className="italic text-[#D9C6A5]">
+                <span className="text-[#D9C6A5]">
                   {" "}Step out multilingual.
                 </span>
               </p>

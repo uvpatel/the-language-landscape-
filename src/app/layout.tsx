@@ -9,7 +9,6 @@ const playfair = Playfair_Display({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -76,7 +75,7 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${manrope.variable}`}
     >
-      <body className="min-h-screen bg-[#F8F5EF] font-[family-name:var(--font-body)] text-[#292624] antialiased">
+      <body className="min-h-screen bg-[#F8F5EF] text-[#292624] antialiased">
         <Navbar />
         {children}
         <Footer />

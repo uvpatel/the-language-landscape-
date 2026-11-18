@@ -137,7 +137,7 @@ export function LearningApproachSection() {
 
             <motion.span
               variants={revealVariants}
-              className="block italic text-[#B32526]"
+              className="block text-[#B32526]"
             >
               living it.
             </motion.span>
@@ -259,7 +259,7 @@ export function LearningApproachSection() {
 
           <motion.h3
             variants={revealVariants}
-            className="mt-5 font-[family-name:var(--font-heading)] text-4xl italic text-[#781E24] sm:text-5xl"
+            className="mt-5 font-[family-name:var(--font-heading)] text-4xl text-[#781E24] sm:text-5xl"
           >
             Understand. Express. Connect.
           </motion.h3>

@@ -1,7 +1,10 @@
-
 @import "tailwindcss";
 
 :root {
+  /* Typography Fallbacks */
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Manrope", sans-serif;
+
   /* Brand */
   --color-primary: #B32526;
   --color-primary-dark: #781E24;
@@ -62,8 +65,30 @@ html {
 
 body {
   margin: 0;
+  font-family: var(--font-body);
+  font-weight: 400;
   background: var(--color-background);
   color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-body);
 }
 
 ::selection {
