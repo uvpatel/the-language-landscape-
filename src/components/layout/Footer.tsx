@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   IconBrandFacebook,
@@ -27,12 +28,17 @@ const ease = [0.22, 1, 0.36, 1] as const;
 export function Footer() {
   const [year, setYear] = useState<number | null>(null);
   const shouldReduceMotion = useReducedMotion();
+  const pathname = usePathname();
 
   useEffect(() => {
     // Keep the year client-derived so prerendering and hydration stay deterministic.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setYear(new Date().getFullYear());
   }, []);
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   const reveal = {
     hidden: { opacity: 0, y: 28 },

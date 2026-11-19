@@ -4,12 +4,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   IconArrowUpRight,
   IconMenu2,
   IconX,
 } from "@tabler/icons-react";
-import { label } from "motion/react-client";
 
 const navLinks = [
   { label: "About", href: "/about" },
@@ -21,6 +21,11 @@ const navLinks = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#292624]/10 bg-[#F8F5EF]/95 backdrop-blur-xl">
@@ -67,7 +72,7 @@ export function Navbar() {
             href="#contact"
             className="group inline-flex items-center gap-2 rounded-sm bg-[#B32526] px-5 py-3 text-[13px] font-medium text-white transition-all duration-300 hover:bg-[#781E24]"
           >
-            Let's Talk
+            Let&apos;s Talk
             <IconArrowUpRight
               size={16}
               stroke={1.8}
@@ -123,7 +128,7 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
               className="mt-6 flex w-full items-center justify-center gap-2 bg-[#B32526] px-5 py-4 text-sm font-medium text-white transition-colors hover:bg-[#781E24]"
             >
-              Let's Talk
+              Let&apos;s Talk
               <IconArrowUpRight size={18} />
             </Link>
 

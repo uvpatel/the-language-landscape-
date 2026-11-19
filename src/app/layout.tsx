@@ -1,6 +1,7 @@
 
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -76,9 +77,13 @@ export default function RootLayout({
       className={`${playfair.variable} ${manrope.variable}`}
     >
       <body className="min-h-screen bg-[#F8F5EF] text-[#292624] antialiased">
-        <Navbar />
+        <Suspense fallback={null}>
+          <Navbar />
+        </Suspense>
         {children}
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </body>
     </html>
   );
