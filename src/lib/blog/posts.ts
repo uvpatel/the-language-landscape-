@@ -1,6 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
+import { connectToDatabase } from "@/lib/mongodb";
+import { Blog, IBlog } from "@/models/Blog";
 import { Article, ArticleFrontmatter } from "@/types/blog";
 import { normalizeCategorySlug } from "./categories";
 import { calculateReadingTime } from "./utils";
@@ -8,90 +10,121 @@ import { calculateReadingTime } from "./utils";
 const BLOG_DIRECTORY = path.join(process.cwd(), "content/blog");
 
 /**
- * Checks if the content/blog directory exists; creates it if absent.
+ * Maps a Mongoose Blog document into an Article object used across the public site.
  */
-async function ensureBlogDirectory(): Promise<void> {
-  try {
-    await fs.access(BLOG_DIRECTORY);
-  } catch {
-    await fs.mkdir(BLOG_DIRECTORY, { recursive: true });
-  }
-}
-
-/**
- * Parses an MDX file and returns a strongly-typed Article object.
- */
-function parseMdxFile(fileName: string, fileContent: string): Article {
-  const { data, content } = matter(fileContent);
-  const frontmatter = data as Partial<ArticleFrontmatter>;
-
-  const slug =
-    frontmatter.slug ||
-    fileName.replace(/\.mdx?$/, "").trim().toLowerCase();
-
-  const category = frontmatter.category || "Culture & Expression";
+function mapBlogToArticle(blog: IBlog | Record<string, unknown>): Article {
+  const b = blog as unknown as IBlog;
+  const category = b.category || "Culture & Expression";
   const categorySlug = normalizeCategorySlug(category);
+  const content = b.content || "";
 
   return {
-    title: frontmatter.title || "Untitled Article",
-    slug,
-    excerpt: frontmatter.excerpt || "",
+    title: b.title,
+    slug: b.slug,
+    excerpt: b.excerpt,
     category,
     categorySlug,
-    author: frontmatter.author || "The Language Landscapes",
-    authorImage: frontmatter.authorImage,
-    authorBio: frontmatter.authorBio,
-    authorRole: frontmatter.authorRole,
-    publishedAt: frontmatter.publishedAt || new Date().toISOString().split("T")[0],
-    featuredImage: frontmatter.featuredImage || "/banasarithakkar.png",
-    featuredImageAlt: frontmatter.featuredImageAlt || frontmatter.title || "Editorial visual",
-    status: frontmatter.status === "published" ? "published" : "draft",
-    featured: Boolean(frontmatter.featured),
-    updatedAt: frontmatter.updatedAt,
-    readingTime: frontmatter.readingTime || calculateReadingTime(content),
-    tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
-    seoTitle: frontmatter.seoTitle,
-    seoDescription: frontmatter.seoDescription,
-    relatedArticles: frontmatter.relatedArticles,
+    author: b.author?.name || "The Language Landscapes",
+    authorImage: b.author?.image || "/banasarithakkar.png",
+    publishedAt: b.publishedAt
+      ? new Date(b.publishedAt).toISOString().split("T")[0]
+      : new Date(b.createdAt).toISOString().split("T")[0],
+    featuredImage: b.coverImage?.url || "/banasarithakkar.png",
+    featuredImageAlt: b.coverImage?.alt || b.title,
+    status: b.status,
+    featured: true,
+    updatedAt: b.updatedAt
+      ? new Date(b.updatedAt).toISOString().split("T")[0]
+      : undefined,
+    readingTime: calculateReadingTime(content),
+    tags: Array.isArray(b.tags) ? b.tags : [],
+    seoTitle: b.seo?.metaTitle || b.title,
+    seoDescription: b.seo?.metaDescription || b.excerpt,
     content,
   };
 }
 
 /**
- * Retrieves all articles from content/blog.
- * By default, excludes draft articles from public listings.
+ * Seeds initial content from content/blog directory into MongoDB if the database has 0 blogs.
  */
-export async function getAllArticles(options?: { includeDrafts?: boolean }): Promise<Article[]> {
-  await ensureBlogDirectory();
-
+async function seedInitialMdxIfEmpty(): Promise<void> {
   try {
-    const entries = await fs.readdir(BLOG_DIRECTORY, { withFileTypes: true });
+    const count = await Blog.countDocuments();
+    if (count > 0) return;
+
+    const entries = await fs.readdir(BLOG_DIRECTORY);
     const mdxFiles = entries.filter(
-      (entry) =>
-        entry.isFile() &&
-        (entry.name.endsWith(".mdx") || entry.name.endsWith(".md"))
+      (f) => f.endsWith(".mdx") || f.endsWith(".md")
     );
 
-    const articles = await Promise.all(
-      mdxFiles.map(async (file) => {
-        const filePath = path.join(BLOG_DIRECTORY, file.name);
-        const fileContent = await fs.readFile(filePath, "utf-8");
-        return parseMdxFile(file.name, fileContent);
-      })
-    );
+    for (const fileName of mdxFiles) {
+      const filePath = path.join(BLOG_DIRECTORY, fileName);
+      const fileContent = await fs.readFile(filePath, "utf-8");
+      const { data, content } = matter(fileContent);
+      const frontmatter = data as Partial<ArticleFrontmatter>;
 
-    const filtered = options?.includeDrafts
-      ? articles
-      : articles.filter((article) => article.status === "published");
+      const slug =
+        frontmatter.slug ||
+        fileName.replace(/\.mdx?$/, "").trim().toLowerCase();
 
-    // Sort descending by publication date
-    return filtered.sort((a, b) => {
-      const dateA = new Date(a.publishedAt).getTime();
-      const dateB = new Date(b.publishedAt).getTime();
-      return dateB - dateA;
-    });
+      await Blog.create({
+        title: frontmatter.title || "The Relationship Between Language and Culture",
+        slug,
+        excerpt:
+          frontmatter.excerpt ||
+          "Explore how language reflects cultural identity and shapes the way we understand the world.",
+        content,
+        coverImage: {
+          url: frontmatter.featuredImage || "/banasarithakkar.png",
+          publicId: "the-language-landscape/blogs/covers/sample",
+          alt: frontmatter.featuredImageAlt || "Editorial visual",
+        },
+        category: frontmatter.category || "Culture & Expression",
+        tags: frontmatter.tags || ["Language", "Culture", "Identity"],
+        author: {
+          name: frontmatter.author || "The Language Landscapes",
+          image: frontmatter.authorImage || "/banasarithakkar.png",
+        },
+        status: "published",
+        publishedAt: frontmatter.publishedAt
+          ? new Date(frontmatter.publishedAt)
+          : new Date(),
+        seo: {
+          metaTitle: frontmatter.seoTitle || frontmatter.title,
+          metaDescription: frontmatter.seoDescription || frontmatter.excerpt,
+          keywords: frontmatter.tags || [],
+        },
+      });
+    }
   } catch (error) {
-    console.error("Error reading blog articles:", error);
+    console.warn("Could not seed initial MDX files into MongoDB:", error);
+  }
+}
+
+/**
+ * Retrieves all articles from MongoDB.
+ * Excludes drafts from public listings unless includeDrafts is true.
+ */
+export async function getAllArticles(options?: {
+  includeDrafts?: boolean;
+}): Promise<Article[]> {
+  try {
+    await connectToDatabase();
+    await seedInitialMdxIfEmpty();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filter: Record<string, any> = {};
+    if (!options?.includeDrafts) {
+      filter.status = "published";
+    }
+
+    const blogs = await Blog.find(filter)
+      .sort({ publishedAt: -1, createdAt: -1 })
+      .lean();
+
+    return blogs.map((b) => mapBlogToArticle(b));
+  } catch (error) {
+    console.error("Error reading blog articles from MongoDB:", error);
     return [];
   }
 }
@@ -103,17 +136,24 @@ export async function getArticleBySlug(
   slug: string,
   options?: { includeDrafts?: boolean }
 ): Promise<Article | null> {
-  const allArticles = await getAllArticles({ includeDrafts: true });
-  const article = allArticles.find((item) => item.slug === slug);
+  try {
+    await connectToDatabase();
+    await seedInitialMdxIfEmpty();
 
-  if (!article) return null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filter: Record<string, any> = { slug };
+    if (!options?.includeDrafts) {
+      filter.status = "published";
+    }
 
-  // In production, enforce draft exclusion unless explicitly enabled
-  if (!options?.includeDrafts && article.status === "draft") {
+    const blog = await Blog.findOne(filter).lean();
+    if (!blog) return null;
+
+    return mapBlogToArticle(blog);
+  } catch (error) {
+    console.error("Error reading blog article by slug:", error);
     return null;
   }
-
-  return article;
 }
 
 /**
@@ -129,11 +169,10 @@ export async function getArticlesByCategory(
 
 /**
  * Retrieves the featured article for the hero/featured section.
- * Picks the most recent article marked as featured: true, or the latest published article.
  */
-export async function getFeaturedArticle(
-  options?: { includeDrafts?: boolean }
-): Promise<Article | null> {
+export async function getFeaturedArticle(options?: {
+  includeDrafts?: boolean;
+}): Promise<Article | null> {
   const articles = await getAllArticles(options);
   if (articles.length === 0) return null;
 
@@ -143,7 +182,6 @@ export async function getFeaturedArticle(
 
 /**
  * Retrieves related articles for an individual post.
- * Matches by category or shared tags, excluding the current article.
  */
 export async function getRelatedArticles(
   currentSlug: string,
@@ -154,7 +192,6 @@ export async function getRelatedArticles(
   const articles = await getAllArticles(options);
   const candidates = articles.filter((article) => article.slug !== currentSlug);
 
-  // Score candidates by same category and matching tags
   const scored = candidates.map((article) => {
     let score = 0;
     if (article.categorySlug === categorySlug) score += 3;

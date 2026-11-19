@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  getAllArticles,
   getArticleBySlug,
   getRelatedArticles,
 } from "@/lib/blog/posts";
-import { renderMdxContent } from "@/lib/blog/mdx";
+import { isAuthenticatedAdmin } from "@/lib/admin/auth";
+import { MarkdownContent } from "@/components/blogs/MarkdownContent";
 import { ArticleBreadcrumbs } from "@/components/blog/article-breadcrumbs";
 import { ArticleHeader } from "@/components/blog/article-header";
 import { ArticleImage } from "@/components/blog/article-image";
@@ -16,35 +16,24 @@ import { ArticleAuthor } from "@/components/blog/article-author";
 import { RelatedArticles } from "@/components/blog/related-articles";
 import { ArticleProgramsCTA } from "@/components/blog/article-programs-cta";
 
+export const instant = false;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export async function generateStaticParams() {
-  const publishedArticles = await getAllArticles({ includeDrafts: false });
-  if (publishedArticles.length > 0) {
-    return publishedArticles.map((article) => ({
-      slug: article.slug,
-    }));
-  }
-
-  // If no published articles exist yet, supply sample/draft slugs for build validation
-  const allArticles = await getAllArticles({ includeDrafts: true });
-  return allArticles.map((article) => ({
-    slug: article.slug,
-  }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug, { includeDrafts: true });
+  const isAuthed = await isAuthenticatedAdmin();
+  const article = await getArticleBySlug(slug, { includeDrafts: isAuthed });
 
-  if (!article) {
+  if (!article || (!isAuthed && article.status === "draft")) {
     return {
       title: "Article Not Found | The Language Landscapes",
+      robots: { index: false, follow: false },
     };
   }
 
@@ -81,20 +70,21 @@ export async function generateMetadata({
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params;
+  const isAuthed = await isAuthenticatedAdmin();
 
-  // Allows direct slug preview with clear draft banner if status === 'draft'
-  const article = await getArticleBySlug(slug, { includeDrafts: true });
+  // Strict draft security: only authenticated admin can preview drafts
+  const article = await getArticleBySlug(slug, { includeDrafts: isAuthed });
 
-  if (!article) {
+  if (!article || (!isAuthed && article.status === "draft")) {
     notFound();
   }
 
-  const [mdxContent, relatedArticles] = await Promise.all([
-    renderMdxContent(article.content),
-    getRelatedArticles(article.slug, article.categorySlug, 3, {
-      includeDrafts: false,
-    }),
-  ]);
+  const relatedArticles = await getRelatedArticles(
+    article.slug,
+    article.categorySlug,
+    3,
+    { includeDrafts: false }
+  );
 
   // JSON-LD structured data for publication / article
   const jsonLd = {
@@ -123,6 +113,17 @@ export default async function ArticlePage({ params }: PageProps) {
 
   return (
     <article className="min-h-screen bg-[#F8F5EF] pb-24 pt-10 sm:pt-14">
+      {/* Draft Preview Banner for Authenticated Administrator */}
+      {article.status === "draft" && (
+        <div className="mx-auto mb-8 max-w-[1440px] px-6 sm:px-10 lg:px-16">
+          <div className="flex items-center justify-between rounded-sm border border-amber-500/40 bg-amber-500/10 p-4 text-xs font-medium text-amber-900">
+            <span>
+              ✦ <strong>Editorial Preview:</strong> This article is currently saved as an unpublished draft. It is only visible to you.
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -153,8 +154,10 @@ export default async function ArticlePage({ params }: PageProps) {
           {/* Table of Contents (if multi-section) */}
           <ArticleToc content={article.content} />
 
-          {/* MDX Body Content */}
-          <ArticleContent>{mdxContent}</ArticleContent>
+          {/* Rendered Markdown Body Content */}
+          <ArticleContent>
+            <MarkdownContent content={article.content} />
+          </ArticleContent>
 
           {/* Author Box */}
           <ArticleAuthor
