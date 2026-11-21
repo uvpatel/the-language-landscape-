@@ -17,6 +17,7 @@ export default function AdminLoginPage() {
     setError(null);
     setIsLoading(true);
 
+    
     try {
       const res = await fetch("/api/admin/auth/login", {
         method: "POST",
