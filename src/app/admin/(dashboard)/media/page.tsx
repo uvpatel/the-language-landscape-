@@ -10,7 +10,9 @@ import {
   IconCheck,
   IconAlertCircle,
   IconPhoto,
+  IconFolder,
 } from "@tabler/icons-react";
+import { AdminSelect, AdminSelectOption } from "@/components/admin/AdminSelect";
 
 interface UploadedMedia {
   url: string;
@@ -80,6 +82,30 @@ export default function AdminMediaPage() {
     setTimeout(() => setCopiedIndex(null), 2500);
   };
 
+  const destinationFolderOptions: AdminSelectOption<"content" | "covers" | "thumbnails">[] = [
+    {
+      value: "content",
+      label: "Article Images",
+      description: "the-language-landscape/blogs/content — Embedded article assets",
+      badge: "content",
+      badgeColor: "bg-[#B32526]/10 text-[#B32526]",
+    },
+    {
+      value: "covers",
+      label: "Cover Images",
+      description: "the-language-landscape/blogs/covers — Hero banner assets",
+      badge: "covers",
+      badgeColor: "bg-[#A58B64]/15 text-[#78613D]",
+    },
+    {
+      value: "thumbnails",
+      label: "Thumbnails",
+      description: "the-language-landscape/blogs/thumbnails — Compact card previews",
+      badge: "thumbnails",
+      badgeColor: "bg-[#788477]/15 text-[#465345]",
+    },
+  ];
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -116,18 +142,14 @@ export default function AdminMediaPage() {
 
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.14em] text-[#514A45]">
-              Destination Folder
-            </label>
-            <select
+            <AdminSelect<"content" | "covers" | "thumbnails">
+              label="Destination Folder"
               value={uploadType}
-              onChange={(e) => setUploadType(e.target.value as "content" | "covers" | "thumbnails")}
-              className="w-full rounded-sm border border-[#D9CFC2] bg-white px-3 py-2 text-xs text-[#292624] outline-none focus:border-[#B32526]"
-            >
-              <option value="content">the-language-landscape/blogs/content (Article Images)</option>
-              <option value="covers">the-language-landscape/blogs/covers (Cover Images)</option>
-              <option value="thumbnails">the-language-landscape/blogs/thumbnails (Thumbnails)</option>
-            </select>
+              onChange={(val) => setUploadType(val)}
+              options={destinationFolderOptions}
+              icon={<IconFolder size={15} stroke={1.6} />}
+              size="md"
+            />
           </div>
 
           <div>

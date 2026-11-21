@@ -12,10 +12,12 @@ import {
   IconEye,
   IconAlertCircle,
   IconX,
+  IconCategory,
 } from "@tabler/icons-react";
 import CoverImageUploader, { CoverImageData } from "./CoverImageUploader";
 import InlineImageModal from "./InlineImageModal";
 import { calculateReadingTime } from "@/lib/blog/utils";
+import { AdminSelect } from "./AdminSelect";
 
 // Dynamically import MDEditor with SSR disabled
 const MDEditor = dynamic(
@@ -27,6 +29,8 @@ interface CategoryOption {
   _id: string;
   title: string;
   slug: string;
+  subtitle?: string;
+  accentColor?: string;
 }
 
 export interface BlogEditorInitialData {
@@ -461,23 +465,23 @@ export function BlogEditor({ initialData, isEditMode = false }: BlogEditorProps)
             </h2>
 
             <div>
-              <label className="mb-1 block text-[11px] font-medium uppercase tracking-[0.14em] text-[#514A45]">
-                Category *
-              </label>
-              <select
+              <AdminSelect
+                label="Category *"
                 value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
+                onChange={(val) => {
+                  setCategory(val);
                   setHasUnsavedChanges(true);
                 }}
-                className="w-full rounded-sm border border-[#D9CFC2] bg-white px-3 py-2 text-xs text-[#292624] outline-none focus:border-[#B32526]"
-              >
-                {categories.map((c) => (
-                  <option key={c._id} value={c.title}>
-                    {c.title}
-                  </option>
-                ))}
-              </select>
+                options={categories.map((c) => ({
+                  value: c.title,
+                  label: c.title,
+                  dotColor: c.accentColor || "#B32526",
+                  description: c.subtitle || undefined,
+                }))}
+                placeholder="Select an editorial category..."
+                icon={<IconCategory size={15} stroke={1.6} />}
+                size="md"
+              />
             </div>
 
             <div>

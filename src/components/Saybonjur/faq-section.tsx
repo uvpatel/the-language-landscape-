@@ -8,7 +8,7 @@ import { faqGroups } from "@/data/say-bonjur/data";
 import SectionLabel from "./section-label";
 import FAQCategoryNavigation from "./faq-category-navigation";
 import FAQAccordion from "./faq-accordion";
-import FAQContactCard from "./faq-contact-card";
+
 
 export default function FAQSection() {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
@@ -71,10 +71,7 @@ export default function FAQSection() {
               />
             </div>
 
-            {/* Desktop Contact Support Card */}
-            <div className="hidden lg:block">
-              <FAQContactCard />
-            </div>
+           
           </div>
 
           {/* Right Column: Selected Category Accordion */}
@@ -90,9 +87,7 @@ export default function FAQSection() {
         </div>
 
         {/* Mobile Contact Support Card (placed cleanly below questions) */}
-        <div className="mt-12 block lg:hidden">
-          <FAQContactCard />
-        </div>
+    
 
         {/* Closing Editorial Detail */}
         <div className="mt-16 border-t border-[#D9CFC2] pt-8 sm:mt-20">

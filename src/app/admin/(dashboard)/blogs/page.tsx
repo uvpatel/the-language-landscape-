@@ -15,8 +15,11 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconX,
+  IconFilter,
+  IconCategory,
 } from "@tabler/icons-react";
 import { formatEditorialDate } from "@/lib/blog/utils";
+import { AdminSelect, AdminSelectOption } from "@/components/admin/AdminSelect";
 
 interface BlogItem {
   _id: string;
@@ -36,6 +39,7 @@ interface CategoryItem {
   _id: string;
   title: string;
   slug: string;
+  accentColor?: string;
 }
 
 export default function AdminBlogsPage() {
@@ -150,6 +154,33 @@ export default function AdminBlogsPage() {
     }
   };
 
+  const statusOptions: AdminSelectOption[] = [
+    { value: "all", label: "All Statuses" },
+    {
+      value: "published",
+      label: "Published Only",
+      dotColor: "#16a34a",
+      badge: "Live",
+      badgeColor: "bg-emerald-500/10 text-emerald-800",
+    },
+    {
+      value: "draft",
+      label: "Drafts Only",
+      dotColor: "#d97706",
+      badge: "Draft",
+      badgeColor: "bg-[#A58B64]/15 text-[#78613D]",
+    },
+  ];
+
+  const categoryOptions: AdminSelectOption[] = [
+    { value: "all", label: "All Categories" },
+    ...categories.map((c) => ({
+      value: c.title,
+      label: c.title,
+      dotColor: c.accentColor || "#B32526",
+    })),
+  ];
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -227,37 +258,32 @@ export default function AdminBlogsPage() {
 
         {/* Status Filter */}
         <div className="sm:col-span-3">
-          <select
+          <AdminSelect
             value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
+            onChange={(val) => {
+              setStatusFilter(val);
               setPage(1);
             }}
-            className="w-full rounded-sm border border-[#D9CFC2] bg-white px-3 py-2 text-xs text-[#292624] outline-none focus:border-[#B32526]"
-          >
-            <option value="all">All Statuses</option>
-            <option value="published">Published Only</option>
-            <option value="draft">Drafts Only</option>
-          </select>
+            options={statusOptions}
+            placeholder="All Statuses"
+            size="sm"
+            icon={<IconFilter size={14} stroke={1.6} />}
+          />
         </div>
 
         {/* Category Filter */}
         <div className="sm:col-span-3">
-          <select
+          <AdminSelect
             value={categoryFilter}
-            onChange={(e) => {
-              setCategoryFilter(e.target.value);
+            onChange={(val) => {
+              setCategoryFilter(val);
               setPage(1);
             }}
-            className="w-full rounded-sm border border-[#D9CFC2] bg-white px-3 py-2 text-xs text-[#292624] outline-none focus:border-[#B32526]"
-          >
-            <option value="all">All Categories</option>
-            {categories.map((c) => (
-              <option key={c._id} value={c.title}>
-                {c.title}
-              </option>
-            ))}
-          </select>
+            options={categoryOptions}
+            placeholder="All Categories"
+            size="sm"
+            icon={<IconCategory size={14} stroke={1.6} />}
+          />
         </div>
       </div>
 
