@@ -102,7 +102,7 @@ export default function OurPhilosohpy() {
                 </div>
 
                 {/* Decorative page edge */}
-                <div className="absolute bottom-0 right-0 h-8 w-8 border-l border-t border-[#E4DDD3] bg-[#EFE9DF] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+<div className="absolute bottom-0 right-0 h-8 w-8 border-l border-t border-[#D8CFC2] bg-[#E2D9CD] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </motion.article>
             </Reveal>
           ))}
